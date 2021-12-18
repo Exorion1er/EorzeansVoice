@@ -133,6 +133,7 @@ namespace EorzeansVoice {
 			FFXIVProcess p = (FFXIVProcess)CBB_PF_Processes.SelectedItem;
 
 			if (!p.def) {
+				refreshListTimer.Enabled = false;
 				GameData.gameProcess = p.process;
 				DialogResult = DialogResult.OK;
 			}
