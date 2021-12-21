@@ -1,15 +1,16 @@
-﻿using System.Diagnostics;
+﻿using EorzeansVoice.Utils;
+using System.Diagnostics;
 
 namespace EorzeansVoice {
 	public static class GameData {
 		public static Process gameProcess;
 
-		private const ulong posX = 0x1E7AB70;
-		private const ulong posY = 0x1E7AB74;
-		private const ulong posZ = 0x1E7AB78;
-		private const ulong nameWhenOnline = 0x1EA42B9;
-		private const ulong mapID = 0x1E768B4;
-		private const ulong instance = 0x1E7214C;
+		private const ulong posX = 0x1E7FAF0;
+		private const ulong posY = 0x1E7FAF4;
+		private const ulong posZ = 0x1E7FAF8;
+		private const ulong nameWhenOnline = 0x1EA9239;
+		private const ulong mapID = 0x1E7B834;
+		private const ulong instance = 0x1E770CC;
 
 		public static bool IsLoggedIn() {
 			if (GetName() != string.Empty) {
