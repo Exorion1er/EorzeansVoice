@@ -1,6 +1,6 @@
 ﻿
 namespace EorzeansVoice {
-	partial class ProcessFinder {
+	partial class ProcessSelectionWindow {
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>

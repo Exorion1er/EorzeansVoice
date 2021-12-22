@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Globalization;
 
-namespace EorzeansVoice {
+namespace EorzeansVoice.Utils {
+	[Serializable]
 	public class Vector3 {
 		public Vector3(float x, float y, float z) {
 			this.x = x;
