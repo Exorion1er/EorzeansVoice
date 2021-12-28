@@ -56,6 +56,9 @@ namespace EorzeansVoiceServer {
 				case NetworkMessageType.SendVoiceToServer:
 					ReceiveVoice(remoteEP, bytes.ToMessage());
 					break;
+				case NetworkMessageType.Disconnect:
+					Console.WriteLine(Prefix() + "Received unhandled DISCONNECT message.");
+					break;
 			}
 
 			return reply;
