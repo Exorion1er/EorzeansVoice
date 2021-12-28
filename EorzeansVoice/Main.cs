@@ -7,6 +7,7 @@ using System.Windows.Forms;
 namespace EorzeansVoice {
 	public partial class Main : Form {
 		private Process gameProcess;
+		private int userID;
 		private bool processUpdateName = false;
 
 		public Main() {
@@ -56,7 +57,13 @@ namespace EorzeansVoice {
 				int mapID = GameData.GetMapID(gameProcess);
 				int instanceID = GameData.GetInstanceID(gameProcess);
 				Vector3 position = GameData.GetPosition(gameProcess);
-				Network.ConnectToVoiceChat(worldID, name, mapID, instanceID, position);
+				userID = Network.ConnectToVoiceChat(worldID, name, mapID, instanceID, position);
+
+				if (userID == 0) {
+					MessageBox.Show("Couldn't connect to voice chat server.");
+					Application.Exit();
+					return;
+				}
 
 				AudioController.StartAudio();
 

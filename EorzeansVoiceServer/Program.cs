@@ -48,7 +48,7 @@ namespace EorzeansVoiceServer {
 					reply = VersionCheck(remoteEP, bytes.ToMessage());
 					break;
 				case NetworkMessageType.Connect:
-					Connect(remoteEP, bytes.ToMessage());
+					reply = Connect(remoteEP, bytes.ToMessage());
 					break;
 				case NetworkMessageType.UpdateServer:
 					reply = UpdateServer(remoteEP, bytes.ToMessage());
@@ -88,7 +88,7 @@ namespace EorzeansVoiceServer {
 			return reply;
 		}
 
-		private static void Connect(IPEndPoint remoteEP, NetworkMessage received) {
+		private static NetworkMessage Connect(IPEndPoint remoteEP, NetworkMessage received) {
 			Connect connect = received.content.ToObject<Connect>();
 
 			Client newClient = new Client {
@@ -107,6 +107,8 @@ namespace EorzeansVoiceServer {
 			}
 
 			clients.Add(newClient);
+
+			return new NetworkMessage(NetworkMessageType.Connected, newClient.id);
 		}
 
 		private static NetworkMessage UpdateServer(IPEndPoint remoteEP, NetworkMessage received) {

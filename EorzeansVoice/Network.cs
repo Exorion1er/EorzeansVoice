@@ -6,6 +6,7 @@ using EorzeansVoiceLib.Utils;
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Windows.Forms;
 
 namespace EorzeansVoice {
 	public static class Network {
@@ -52,41 +53,55 @@ namespace EorzeansVoice {
 				byte[] received = udpClient.Receive(ref remoteEP);
 
 				NetworkMessage msg = received.ToMessage();
-				if (msg.content as string == "Pong") {
-					return true;
-				}
-				return false;
-			} catch {
+				return (string)msg.content == "Pong";
+			} catch (Exception e) {
+				MessageBox.Show("An error occurred in Network.PingServer : " + e.Message);
 				return false;
 			}
 		}
 
 		public static VersionCheckAnswer IsUpToDate() {
-			VersionCheck vCheck = new VersionCheck(NetworkConsts.clientVersion, NetworkConsts.serverVersion);
-			byte[] versionCheckMessage = new NetworkMessage(NetworkMessageType.VersionCheck, vCheck).ToBytes();
-			udpClient.Send(versionCheckMessage, versionCheckMessage.Length);
+			try {
+				VersionCheck vCheck = new VersionCheck(NetworkConsts.clientVersion, NetworkConsts.serverVersion);
+				byte[] versionCheckMessage = new NetworkMessage(NetworkMessageType.VersionCheck, vCheck).ToBytes();
+				udpClient.Send(versionCheckMessage, versionCheckMessage.Length);
 
-			IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(NetworkConsts.serverAddr), NetworkConsts.port);
-			byte[] received = udpClient.Receive(ref remoteEP);
+				IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(NetworkConsts.serverAddr), NetworkConsts.port);
+				byte[] received = udpClient.Receive(ref remoteEP);
 
-			NetworkMessage msg = received.ToMessage();
-			return (VersionCheckAnswer)msg.content;
+				NetworkMessage msg = received.ToMessage();
+				return (VersionCheckAnswer)msg.content;
+			} catch (Exception e) {
+				MessageBox.Show("An error occurred in Network.IsUpToDate : " + e.Message);
+				return VersionCheckAnswer.ClientOutOfDate; // This makes the app close
+			}
 		}
 
-		public static void ConnectToVoiceChat(short worldID, string name, int mapID, int instanceID, Vector3 position) {
-			Connect connect = new Connect {
-				worldID = worldID,
-				name = name,
-				mapID = mapID,
-				instanceID = instanceID,
-				position = position
-			};
+		public static int ConnectToVoiceChat(short worldID, string name, int mapID, int instanceID, Vector3 position) {
+			try {
+				Connect connect = new Connect {
+					worldID = worldID,
+					name = name,
+					mapID = mapID,
+					instanceID = instanceID,
+					position = position
+				};
 
-			byte[] connectMessage = new NetworkMessage(NetworkMessageType.Connect, connect).ToBytes();
-			udpClient.Send(connectMessage, connectMessage.Length);
+				byte[] connectMessage = new NetworkMessage(NetworkMessageType.Connect, connect).ToBytes();
+				udpClient.Send(connectMessage, connectMessage.Length);
 
-			// Start receive info loop
-			//udpClient.BeginReceive(new AsyncCallback(ReceiveVoiceData), null); // Start receive voice loop
+				IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(NetworkConsts.serverAddr), NetworkConsts.port);
+				byte[] received = udpClient.Receive(ref remoteEP);
+
+				NetworkMessage msg = received.ToMessage();
+				return (int)msg.content;
+
+				// Start receive info loop
+				//udpClient.BeginReceive(new AsyncCallback(ReceiveVoiceData), null); // Start receive voice loop
+			} catch (Exception e) {
+				MessageBox.Show("An error occurred in Network.ConnectToVoiceChat : " + e.Message);
+				return 0;
+			}
 		}
 
 		public static void SendInfoToServer(Vector3 pos) {
