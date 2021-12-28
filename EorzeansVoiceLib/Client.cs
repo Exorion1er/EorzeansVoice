@@ -1,13 +1,11 @@
 ﻿using EorzeansVoice.Utils;
-using System;
-using System.Collections.Generic;
 
 namespace EorzeansVoiceLib {
 	public class Client {
 		public int id;
 		public string ipAddress;
 		public int port;
-		//public string server;
+		public short worldID;
 		public string name;
 		public int mapID;
 		public int instanceID;
@@ -18,7 +16,7 @@ namespace EorzeansVoiceLib {
 		}
 
 		public string ToStringDetailed() {
-			return ToString() + " (map:" + mapID + "|instance:" + instanceID + ") (" + ipAddress + ":" + port + ")"; // Add server
+			return ToString() + " (World:" + worldID + "|map:" + mapID + "|instance:" + instanceID + ") (" + ipAddress + ":" + port + ")";
 		}
 	}
 }

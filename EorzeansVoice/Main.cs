@@ -51,11 +51,12 @@ namespace EorzeansVoice {
 				TIM_LoginWait.Enabled = false;
 				LBL_Status.Text = "Connecting to server...";
 
+				short worldID = GameData.GetCurrentWorldID(gameProcess);
 				string name = GameData.GetName(gameProcess);
 				int mapID = GameData.GetMapID(gameProcess);
-				int instanceID = GameData.GetInstance(gameProcess);
+				int instanceID = GameData.GetInstanceID(gameProcess);
 				Vector3 position = GameData.GetPosition(gameProcess);
-				Network.ConnectToVoiceChat(name, mapID, instanceID, position);
+				Network.ConnectToVoiceChat(worldID, name, mapID, instanceID, position);
 
 				AudioController.StartAudio();
 

@@ -95,6 +95,7 @@ namespace EorzeansVoiceServer {
 				id = GetNewID(),
 				ipAddress = remoteEP.Address.ToString(),
 				port = remoteEP.Port,
+				worldID = connect.worldID,
 				name = connect.name,
 				mapID = connect.mapID,
 				instanceID = connect.instanceID,
@@ -113,7 +114,7 @@ namespace EorzeansVoiceServer {
 			Client client = clients.Find(x => x.ipAddress == remoteEP.Address.ToString() && x.port == remoteEP.Port);
 			client.position = newPos;
 
-			List<Client> around = clients.Where(x => x.mapID == client.mapID && x.instanceID == client.instanceID).ToList(); // Add server comparison
+			List<Client> around = clients.Where(x => x.worldID == client.worldID && x.mapID == client.mapID && x.instanceID == client.instanceID).ToList();
 			around.Remove(client);
 			List<ClientInfo> infoOfAround = ClientInfo.FromClients(around);
 

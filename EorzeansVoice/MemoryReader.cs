@@ -9,16 +9,16 @@ namespace EorzeansVoice {
 		[DllImport("kernel32.dll", SetLastError = true)]
 		private static extern bool ReadProcessMemory(IntPtr hProcess, ulong lpBaseAddress, byte[] lpBuffer, int nSize, IntPtr lpNumberOfBytesRead);
 
-		public static T? GetValue<T>(Process p, ulong offset) where T : struct {
+		public static T GetValue<T>(Process p, ulong offset, ulong overrideAddress = 0L) {
 			int length = Marshal.SizeOf(typeof(T));
-			byte[] data = ReadMemory(p, offset, length);
+			byte[] data = ReadMemory(p, offset, length, overrideAddress);
 
 			GCHandle pinnedStruct = GCHandle.Alloc(data, GCHandleType.Pinned);
 			try {
 				return Marshal.PtrToStructure<T>(pinnedStruct.AddrOfPinnedObject());
 			} catch (Exception e) {
 				MessageBox.Show("Error converting read memory : " + e.Message);
-				return null;
+				return default;
 			} finally {
 				pinnedStruct.Free();
 			}
@@ -36,11 +36,16 @@ namespace EorzeansVoice {
 			return final;
 		}
 
-		private static byte[] ReadMemory(Process p, ulong offset, int length) {
+		private static byte[] ReadMemory(Process p, ulong offset, int length, ulong overrideAddress = 0L) {
 			byte[] data = new byte[length];
 
 			try {
 				ulong address = (ulong)p.MainModule.BaseAddress + offset;
+
+				if (overrideAddress != 0L) {
+					address = overrideAddress + offset;
+				}
+
 				ReadProcessMemory(p.Handle, address, data, data.Length, IntPtr.Zero);
 			} catch (Exception e) {
 				MessageBox.Show("Error reading memory : " + e.Message);

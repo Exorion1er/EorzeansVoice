@@ -2,7 +2,7 @@
 
 namespace EorzeansVoiceLib.NetworkMessageContent {
 	public class Connect {
-		// Server
+		public short worldID;
 		public string name;
 		public int mapID;
 		public int instanceID;

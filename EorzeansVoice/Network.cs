@@ -73,8 +73,9 @@ namespace EorzeansVoice {
 			return (VersionCheckAnswer)msg.content;
 		}
 
-		public static void ConnectToVoiceChat(string name, int mapID, int instanceID, Vector3 position) {
+		public static void ConnectToVoiceChat(short worldID, string name, int mapID, int instanceID, Vector3 position) {
 			Connect connect = new Connect {
+				worldID = worldID,
 				name = name,
 				mapID = mapID,
 				instanceID = instanceID,
