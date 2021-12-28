@@ -53,7 +53,7 @@ namespace EorzeansVoiceServer {
 				case NetworkMessageType.UpdateServer:
 					reply = UpdateServer(remoteEP, bytes.ToMessage());
 					break;
-				case NetworkMessageType.SendVoice:
+				case NetworkMessageType.SendVoiceToServer:
 					ReceiveVoice(remoteEP, bytes.ToMessage());
 					break;
 			}
@@ -66,12 +66,12 @@ namespace EorzeansVoiceServer {
 				Console.WriteLine(Prefix() + "Received ping from " + remoteEP.ToString() + ", answering pong.");
 			}
 
-			return new NetworkMessage(NetworkMessageType.Ping, "Pong");
+			return new NetworkMessage(NetworkMessageType.Pong, "Pong");
 		}
 
 		private static NetworkMessage VersionCheck(IPEndPoint remoteEP, NetworkMessage received) {
 			VersionCheck vCheck = received.content.ToObject<VersionCheck>();
-			NetworkMessage reply = new NetworkMessage(NetworkMessageType.VersionCheck, VersionCheckAnswer.UpToDate);
+			NetworkMessage reply = new NetworkMessage(NetworkMessageType.VersionCheckResult, VersionCheckAnswer.UpToDate);
 			string verboseResult = "Up to date.";
 			if (vCheck.clientVersion < NetworkConsts.clientVersion) {
 				reply.content = VersionCheckAnswer.ClientOutOfDate;
