@@ -16,7 +16,7 @@
 		Pong = 6, // string "Pong"
 		VersionCheckResult = 7, // VersionCheckAnswer enum
 		Connected = 8, // int ID
-		UpdateClient = 9, // UpdateClient object
+		UpdateClient = 9, // List<ClientInfo> object
 		SendVoiceToClient = 10 // TBD object
 	}
 }

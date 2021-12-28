@@ -138,8 +138,14 @@ namespace EorzeansVoice {
 		}
 
 		private void UpdatePositionTick(object sender, EventArgs e) {
-			// Cache it and send only if modified
-			Network.SendInfoToServer(GameData.GetPosition(gameProcess));
+			// Cache data and send only if modified
+
+			Vector3 position = GameData.GetPosition(gameProcess);
+			short worldID = GameData.GetCurrentWorldID(gameProcess);
+			int mapID = GameData.GetMapID(gameProcess);
+			int instanceID = GameData.GetInstanceID(gameProcess);
+
+			Network.SendInfoToServer(userID, position, worldID, mapID, instanceID);
 		}
 	}
 }

@@ -51,7 +51,7 @@ namespace EorzeansVoiceServer {
 					reply = Connect(remoteEP, bytes.ToMessage());
 					break;
 				case NetworkMessageType.UpdateServer:
-					reply = UpdateServer(remoteEP, bytes.ToMessage());
+					reply = UpdateServer(bytes.ToMessage());
 					break;
 				case NetworkMessageType.SendVoiceToServer:
 					ReceiveVoice(remoteEP, bytes.ToMessage());
@@ -114,10 +114,14 @@ namespace EorzeansVoiceServer {
 			return new NetworkMessage(NetworkMessageType.Connected, newClient.id);
 		}
 
-		private static NetworkMessage UpdateServer(IPEndPoint remoteEP, NetworkMessage received) {
-			Vector3 newPos = received.content.ToObject<Vector3>();
-			Client client = clients.Find(x => x.ipAddress == remoteEP.Address.ToString() && x.port == remoteEP.Port);
-			client.position = newPos;
+		private static NetworkMessage UpdateServer(NetworkMessage received) {
+			UpdateServer newInfo = received.content.ToObject<UpdateServer>();
+			Client client = clients.Find(x => x.id == newInfo.id);
+
+			client.worldID = newInfo.worldID;
+			client.mapID = newInfo.mapID;
+			client.instanceID = newInfo.instanceID;
+			client.position = newInfo.position;
 
 			List<Client> around = clients.Where(x => x.worldID == client.worldID && x.mapID == client.mapID && x.instanceID == client.instanceID).ToList();
 			around.Remove(client);
