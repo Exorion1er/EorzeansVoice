@@ -114,7 +114,7 @@ namespace EorzeansVoice {
 			};
 
 			byte[] updateServerMessage = new NetworkMessage(NetworkMessageType.UpdateServer, newInfo).ToBytes();
-			udpClient.Send(updateServerMessage, updateServerMessage.Length);
+			udpClient.SendAsync(updateServerMessage, updateServerMessage.Length);
 		}
 
 		public static void SendVoiceToServer(byte[] data) {
