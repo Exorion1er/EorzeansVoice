@@ -22,11 +22,15 @@
 
   <ItemGroup>
     <None Remove="opus.dll" />
+    <None Remove="POpusCodec.dll" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="opus.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="POpusCodec.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
