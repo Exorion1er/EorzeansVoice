@@ -96,9 +96,6 @@ namespace EorzeansVoice {
 
 				NetworkMessage msg = received.ToMessage();
 				return (int)msg.content;
-
-				// Start receive info loop
-				//udpClient.BeginReceive(new AsyncCallback(ReceiveVoiceData), null); // Start receive voice loop
 			} catch (Exception e) {
 				MessageBox.Show("An error occurred in Network.ConnectToVoiceChat : " + e.Message);
 				return 0;
