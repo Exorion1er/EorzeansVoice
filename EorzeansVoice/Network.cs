@@ -4,6 +4,7 @@ using EorzeansVoiceLib.Enums;
 using EorzeansVoiceLib.NetworkMessageContent;
 using EorzeansVoiceLib.Utils;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
@@ -37,7 +38,7 @@ namespace EorzeansVoice {
 				IPEndPoint ep = new IPEndPoint(IPAddress.Parse(NetworkConsts.serverAddr), NetworkConsts.port);
 				udpClient = new UdpClient();
 				udpClient.Connect(ep);
-				
+
 				return true;
 			} catch {
 				return false;
@@ -117,18 +118,67 @@ namespace EorzeansVoice {
 			udpClient.SendAsync(updateServerMessage, updateServerMessage.Length);
 		}
 
+		public static void SendKeepAlive(int userID) {
+			byte[] data = new NetworkMessage(NetworkMessageType.KeepAlive, userID).ToBytes();
+			udpClient.SendAsync(data, data.Length);
+		}
+
+		public static void StartReceivingData() {
+			udpClient.BeginReceive(new AsyncCallback(ReceiveData), null);
+		}
+
 		public static void SendVoiceToServer(byte[] data) {
-			byte[] sendVoiceMessage = new NetworkMessage(NetworkMessageType.SendVoiceToServer, data).ToBytes();
+			SendVoice content = new SendVoice {
+				id = Main.instance.userID,
+				data = data
+			};
+
+			byte[] sendVoiceMessage = new NetworkMessage(NetworkMessageType.SendVoiceToServer, content).ToBytes();
 			udpClient.SendAsync(sendVoiceMessage, sendVoiceMessage.Length);
 		}
 
-		private static void ReceiveVoiceData(IAsyncResult result) {
+		public static void Disconnect(int userID) {
+			byte[] data = new NetworkMessage(NetworkMessageType.Disconnect, userID).ToBytes();
+			udpClient.Send(data, data.Length);
+		}
+
+		private static void ReceiveData(IAsyncResult result) {
 			IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, NetworkConsts.port);
-			byte[] received = udpClient.EndReceive(result, ref remoteEP);
+			NetworkMessage msg = null;
+			byte[] received = null;
 
-			// Handle data received
+			try {
+				received = udpClient.EndReceive(result, ref remoteEP);
+			} catch (Exception e) {
+				MessageBox.Show("An error ocurred trying to receive data from the server. Please restart EorzeansVoice.");
+				MessageBox.Show(e.Message + "\n\n" + e.StackTrace);
+				Application.Exit();
+				return;
+			}
 
-			udpClient.BeginReceive(new AsyncCallback(ReceiveVoiceData), null);
+			udpClient.BeginReceive(new AsyncCallback(ReceiveData), null);
+
+			msg = received.ToMessage();
+			switch (msg.type) {
+				case NetworkMessageType.UpdateClient:
+					Main.instance.UpdateAround(msg.content.ToObject<List<ClientInfo>>());
+					break;
+				case NetworkMessageType.SendVoiceToClient:
+					AudioController.ProcessAudioData(msg.content.ToObject<SendVoice>());
+					break;
+				case NetworkMessageType.ForceDisconnect:
+					ForceDisconnect((string)msg.content);
+					break;
+			}
+		}
+
+		public static void ForceDisconnect(string error) {
+			if (Main.instance.userID != 0) {
+				Disconnect(Main.instance.userID);
+			}
+
+			MessageBox.Show("An error occurred that made the server disconnect you. Please restart EorzeansVoice. Error : " + error);
+			Application.Exit();
 		}
 	}
 }

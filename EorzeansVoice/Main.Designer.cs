@@ -37,6 +37,7 @@ namespace EorzeansVoice {
 			this.CBB_AudioInputs = new System.Windows.Forms.ComboBox();
 			this.TIM_LoginWait = new System.Windows.Forms.Timer(this.components);
 			this.TIM_SendPosition = new System.Windows.Forms.Timer(this.components);
+			this.TIM_KeepAlive = new System.Windows.Forms.Timer(this.components);
 			this.GPB_Process.SuspendLayout();
 			this.GPB_Audio.SuspendLayout();
 			this.SuspendLayout();
@@ -156,6 +157,11 @@ namespace EorzeansVoice {
 			this.TIM_SendPosition.Interval = 500;
 			this.TIM_SendPosition.Tick += new System.EventHandler(this.UpdatePositionTick);
 			// 
+			// TIM_KeepAlive
+			// 
+			this.TIM_KeepAlive.Interval = 5000;
+			this.TIM_KeepAlive.Tick += new System.EventHandler(this.KeepAliveTick);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -168,6 +174,7 @@ namespace EorzeansVoice {
 			this.Name = "Main";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Eorzeans Voice";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
 			this.Load += new System.EventHandler(this.Main_Load);
 			this.Shown += new System.EventHandler(this.Main_Shown);
 			this.GPB_Process.ResumeLayout(false);
@@ -190,6 +197,7 @@ namespace EorzeansVoice {
 		private System.Windows.Forms.ComboBox CBB_AudioInputs;
 		private System.Windows.Forms.Timer TIM_LoginWait;
 		private System.Windows.Forms.Timer TIM_SendPosition;
+		private System.Windows.Forms.Timer TIM_KeepAlive;
 	}
 }
 
