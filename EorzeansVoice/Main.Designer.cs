@@ -38,8 +38,12 @@ namespace EorzeansVoice {
 			this.TIM_LoginWait = new System.Windows.Forms.Timer(this.components);
 			this.TIM_SendPosition = new System.Windows.Forms.Timer(this.components);
 			this.TIM_KeepAlive = new System.Windows.Forms.Timer(this.components);
+			this.GPB_Around = new System.Windows.Forms.GroupBox();
+			this.PAN_AroundContent = new System.Windows.Forms.Panel();
+			this.TIM_UpdateControls = new System.Windows.Forms.Timer(this.components);
 			this.GPB_Process.SuspendLayout();
 			this.GPB_Audio.SuspendLayout();
+			this.GPB_Around.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// LBL_Status
@@ -105,9 +109,9 @@ namespace EorzeansVoice {
 			this.GPB_Audio.Controls.Add(this.LBL_AudioInputs);
 			this.GPB_Audio.Controls.Add(this.CBB_AudioOutputs);
 			this.GPB_Audio.Controls.Add(this.CBB_AudioInputs);
-			this.GPB_Audio.Location = new System.Drawing.Point(18, 127);
+			this.GPB_Audio.Location = new System.Drawing.Point(12, 127);
 			this.GPB_Audio.Name = "GPB_Audio";
-			this.GPB_Audio.Size = new System.Drawing.Size(455, 156);
+			this.GPB_Audio.Size = new System.Drawing.Size(467, 156);
 			this.GPB_Audio.TabIndex = 2;
 			this.GPB_Audio.TabStop = false;
 			this.GPB_Audio.Text = "Audio";
@@ -138,7 +142,7 @@ namespace EorzeansVoice {
 			this.CBB_AudioOutputs.FormattingEnabled = true;
 			this.CBB_AudioOutputs.Location = new System.Drawing.Point(107, 51);
 			this.CBB_AudioOutputs.Name = "CBB_AudioOutputs";
-			this.CBB_AudioOutputs.Size = new System.Drawing.Size(342, 23);
+			this.CBB_AudioOutputs.Size = new System.Drawing.Size(354, 23);
 			this.CBB_AudioOutputs.TabIndex = 1;
 			// 
 			// CBB_AudioInputs
@@ -149,7 +153,7 @@ namespace EorzeansVoice {
 			this.CBB_AudioInputs.FormattingEnabled = true;
 			this.CBB_AudioInputs.Location = new System.Drawing.Point(107, 22);
 			this.CBB_AudioInputs.Name = "CBB_AudioInputs";
-			this.CBB_AudioInputs.Size = new System.Drawing.Size(342, 23);
+			this.CBB_AudioInputs.Size = new System.Drawing.Size(354, 23);
 			this.CBB_AudioInputs.TabIndex = 0;
 			// 
 			// TIM_SendPosition
@@ -162,11 +166,42 @@ namespace EorzeansVoice {
 			this.TIM_KeepAlive.Interval = 5000;
 			this.TIM_KeepAlive.Tick += new System.EventHandler(this.KeepAliveTick);
 			// 
+			// GPB_Around
+			// 
+			this.GPB_Around.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.GPB_Around.Controls.Add(this.PAN_AroundContent);
+			this.GPB_Around.Location = new System.Drawing.Point(12, 290);
+			this.GPB_Around.Name = "GPB_Around";
+			this.GPB_Around.Size = new System.Drawing.Size(467, 298);
+			this.GPB_Around.TabIndex = 7;
+			this.GPB_Around.TabStop = false;
+			this.GPB_Around.Text = "Around";
+			// 
+			// PAN_AroundContent
+			// 
+			this.PAN_AroundContent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.PAN_AroundContent.AutoScroll = true;
+			this.PAN_AroundContent.BackColor = System.Drawing.Color.Transparent;
+			this.PAN_AroundContent.Location = new System.Drawing.Point(0, 7);
+			this.PAN_AroundContent.Name = "PAN_AroundContent";
+			this.PAN_AroundContent.Size = new System.Drawing.Size(467, 291);
+			this.PAN_AroundContent.TabIndex = 0;
+			// 
+			// TIM_UpdateControls
+			// 
+			this.TIM_UpdateControls.Enabled = true;
+			this.TIM_UpdateControls.Tick += new System.EventHandler(this.UpdateControls);
+			// 
 			// Main
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(491, 744);
+			this.ClientSize = new System.Drawing.Size(491, 600);
+			this.Controls.Add(this.GPB_Around);
 			this.Controls.Add(this.GPB_Audio);
 			this.Controls.Add(this.GPB_Process);
 			this.Controls.Add(this.LBL_Status);
@@ -180,6 +215,7 @@ namespace EorzeansVoice {
 			this.GPB_Process.ResumeLayout(false);
 			this.GPB_Audio.ResumeLayout(false);
 			this.GPB_Audio.PerformLayout();
+			this.GPB_Around.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -198,6 +234,9 @@ namespace EorzeansVoice {
 		private System.Windows.Forms.Timer TIM_LoginWait;
 		private System.Windows.Forms.Timer TIM_SendPosition;
 		private System.Windows.Forms.Timer TIM_KeepAlive;
+		private System.Windows.Forms.GroupBox GPB_Around;
+		private System.Windows.Forms.Timer TIM_UpdateControls;
+		private System.Windows.Forms.Panel PAN_AroundContent;
 	}
 }
 

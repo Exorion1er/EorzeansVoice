@@ -16,6 +16,7 @@ namespace EorzeansVoice {
 			public Vector3 position;
 			public BufferedWaveProvider waveProvider;
 			public WaveChannel32 channel;
+			public UC_ClientAround controls;
 		}
 
 		public static Main instance;
@@ -191,8 +192,21 @@ namespace EorzeansVoice {
 			}
 		}
 
+		private void UpdateControls(object sender, EventArgs e) {
+			foreach (ClientAround c in around) {
+				if (c.controls == null) {
+					UC_ClientAround newClientControls = new UC_ClientAround {
+						Dock = DockStyle.Top
+					};
+					PAN_AroundContent.Controls.Add(newClientControls);
+
+					c.controls = newClientControls;
+				}
+			}
+		}
+
 		private void KeepAliveTick(object sender, EventArgs e) {
-			// OPTIMIZATION : Only send if nothing was send in the last 5s
+			// OPTIMIZATION : Only send if nothing was sent in the last 5s
 			Network.SendKeepAlive(userID);
 		}
 
