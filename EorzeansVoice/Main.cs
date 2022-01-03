@@ -16,7 +16,7 @@ namespace EorzeansVoice {
 			public Vector3 position;
 			public BufferedWaveProvider waveProvider;
 			public WaveChannel32 channel;
-			public UC_ClientAround controls;
+			public USC_ClientAround controls;
 		}
 
 		public static Main instance;
@@ -195,7 +195,7 @@ namespace EorzeansVoice {
 		private void UpdateControls(object sender, EventArgs e) {
 			foreach (ClientAround c in around) {
 				if (c.controls == null) {
-					UC_ClientAround newClientControls = new UC_ClientAround {
+					USC_ClientAround newClientControls = new USC_ClientAround {
 						Dock = DockStyle.Top
 					};
 					PAN_AroundContent.Controls.Add(newClientControls);
