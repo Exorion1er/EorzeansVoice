@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace EorzeansVoice.Utils {
 	[Serializable]
-	public class Vector3 {
+	public struct Vector3 {
 		public Vector3(float x, float y, float z) {
 			this.x = x;
 			this.y = y;
@@ -38,5 +38,21 @@ namespace EorzeansVoice.Utils {
 				formatProvider = CultureInfo.InvariantCulture.NumberFormat;
 			return string.Format("({0}, {1}, {2})", x.ToString(format, formatProvider), y.ToString(format, formatProvider), z.ToString(format, formatProvider));
 		}
+
+		public override bool Equals(object obj) {
+			return obj is Vector3 vector &&
+				   x == vector.x &&
+				   y == vector.y &&
+				   z == vector.z;
+		}
+
+		public override int GetHashCode() {
+			return HashCode.Combine(x, y, z);
+		}
+
+		public static bool operator ==(Vector3 a, Vector3 b) {
+			return a.Equals(b);
+		}
+		public static bool operator !=(Vector3 a, Vector3 b) => !(a == b); 
 	}
 }

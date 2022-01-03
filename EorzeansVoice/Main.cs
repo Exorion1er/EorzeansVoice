@@ -24,6 +24,7 @@ namespace EorzeansVoice {
 		public int userID;
 		public List<ClientAround> around = new List<ClientAround>();
 
+		private UpdateServer infoCache;
 		private Process gameProcess;
 		private bool processUpdateName = false;
 
@@ -89,7 +90,7 @@ namespace EorzeansVoice {
 
 				LBL_Status.Text = "Connected !";
 				TIM_KeepAlive.Enabled = true;
-				TIM_SendPosition.Enabled = true;
+				TIM_SendInfo.Enabled = true;
 			} else {
 				LBL_Status.Text = "Please log into a character.";
 				TIM_LoginWait.Interval = 3000; // 3s
@@ -159,15 +160,19 @@ namespace EorzeansVoice {
 			LogInAndConnect();
 		}
 
-		private void UpdatePositionTick(object sender, EventArgs e) {
-			// OPTIMIZATION : Cache data and send only if modified
+		private void SendInfoTick(object sender, EventArgs e) {
+			UpdateServer newInfo = new UpdateServer {
+				id = userID,
+				position = GameData.GetPosition(gameProcess),
+				worldID = GameData.GetCurrentWorldID(gameProcess),
+				mapID = GameData.GetMapID(gameProcess),
+				instanceID = GameData.GetInstanceID(gameProcess)
+			};
 
-			Vector3 position = GameData.GetPosition(gameProcess);
-			short worldID = GameData.GetCurrentWorldID(gameProcess);
-			int mapID = GameData.GetMapID(gameProcess);
-			int instanceID = GameData.GetInstanceID(gameProcess);
-
-			Network.SendInfoToServer(userID, position, worldID, mapID, instanceID);
+			if (infoCache != newInfo) {
+				infoCache = newInfo;
+				Network.SendInfoToServer(newInfo);
+			}
 		}
 
 		public void UpdateAround(List<ClientInfo> info) {

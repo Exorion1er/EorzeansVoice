@@ -102,16 +102,8 @@ namespace EorzeansVoice {
 			}
 		}
 
-		public static void SendInfoToServer(int id, Vector3 pos, short worldID, int mapID, int instanceID) {
-			UpdateServer newInfo = new UpdateServer {
-				id = id,
-				position = pos,
-				worldID = worldID,
-				mapID = mapID,
-				instanceID = instanceID
-			};
-
-			byte[] updateServerMessage = new NetworkMessage(NetworkMessageType.UpdateServer, newInfo).ToBytes();
+		public static void SendInfoToServer(UpdateServer info) {
+			byte[] updateServerMessage = new NetworkMessage(NetworkMessageType.UpdateServer, info).ToBytes();
 			udpClient.SendAsync(updateServerMessage, updateServerMessage.Length);
 		}
 
