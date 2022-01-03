@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EorzeansVoice {
-	public partial class UC_ClientAround : UserControl {
-		public UC_ClientAround() {
+	public partial class USC_ClientAround : UserControl {
+		public USC_ClientAround() {
 			InitializeComponent();
 		}
 	}

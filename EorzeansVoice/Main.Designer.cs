@@ -31,7 +31,12 @@ namespace EorzeansVoice {
 			this.LBL_Process = new System.Windows.Forms.Label();
 			this.TIM_Process = new System.Windows.Forms.Timer(this.components);
 			this.GPB_Audio = new System.Windows.Forms.GroupBox();
-			this.label2 = new System.Windows.Forms.Label();
+			this.LBL_GlobalVolume = new System.Windows.Forms.Label();
+			this.LBL_GlobalVolumeName = new System.Windows.Forms.Label();
+			this.BT_Mute = new System.Windows.Forms.Button();
+			this.TBR_GlobalVolume = new System.Windows.Forms.TrackBar();
+			this.BT_Deafen = new System.Windows.Forms.Button();
+			this.LBL_AudioOutputs = new System.Windows.Forms.Label();
 			this.LBL_AudioInputs = new System.Windows.Forms.Label();
 			this.CBB_AudioOutputs = new System.Windows.Forms.ComboBox();
 			this.CBB_AudioInputs = new System.Windows.Forms.ComboBox();
@@ -43,6 +48,7 @@ namespace EorzeansVoice {
 			this.TIM_UpdateControls = new System.Windows.Forms.Timer(this.components);
 			this.GPB_Process.SuspendLayout();
 			this.GPB_Audio.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.TBR_GlobalVolume)).BeginInit();
 			this.GPB_Around.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -105,25 +111,82 @@ namespace EorzeansVoice {
 			// 
 			this.GPB_Audio.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.GPB_Audio.Controls.Add(this.label2);
+			this.GPB_Audio.Controls.Add(this.LBL_GlobalVolume);
+			this.GPB_Audio.Controls.Add(this.LBL_GlobalVolumeName);
+			this.GPB_Audio.Controls.Add(this.BT_Mute);
+			this.GPB_Audio.Controls.Add(this.TBR_GlobalVolume);
+			this.GPB_Audio.Controls.Add(this.BT_Deafen);
+			this.GPB_Audio.Controls.Add(this.LBL_AudioOutputs);
 			this.GPB_Audio.Controls.Add(this.LBL_AudioInputs);
 			this.GPB_Audio.Controls.Add(this.CBB_AudioOutputs);
 			this.GPB_Audio.Controls.Add(this.CBB_AudioInputs);
 			this.GPB_Audio.Location = new System.Drawing.Point(12, 127);
 			this.GPB_Audio.Name = "GPB_Audio";
-			this.GPB_Audio.Size = new System.Drawing.Size(467, 156);
+			this.GPB_Audio.Size = new System.Drawing.Size(467, 135);
 			this.GPB_Audio.TabIndex = 2;
 			this.GPB_Audio.TabStop = false;
 			this.GPB_Audio.Text = "Audio";
 			// 
-			// label2
+			// LBL_GlobalVolume
 			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(6, 54);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(89, 15);
-			this.label2.TabIndex = 3;
-			this.label2.Text = "Output Device :";
+			this.LBL_GlobalVolume.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.LBL_GlobalVolume.Location = new System.Drawing.Point(321, 80);
+			this.LBL_GlobalVolume.Name = "LBL_GlobalVolume";
+			this.LBL_GlobalVolume.RightToLeft = System.Windows.Forms.RightToLeft.No;
+			this.LBL_GlobalVolume.Size = new System.Drawing.Size(38, 45);
+			this.LBL_GlobalVolume.TabIndex = 8;
+			this.LBL_GlobalVolume.Text = "100%";
+			this.LBL_GlobalVolume.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			// 
+			// LBL_GlobalVolumeName
+			// 
+			this.LBL_GlobalVolumeName.AutoSize = true;
+			this.LBL_GlobalVolumeName.Location = new System.Drawing.Point(6, 95);
+			this.LBL_GlobalVolumeName.Name = "LBL_GlobalVolumeName";
+			this.LBL_GlobalVolumeName.Size = new System.Drawing.Size(90, 15);
+			this.LBL_GlobalVolumeName.TabIndex = 7;
+			this.LBL_GlobalVolumeName.Text = "Global Volume :";
+			// 
+			// BT_Mute
+			// 
+			this.BT_Mute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.BT_Mute.Location = new System.Drawing.Point(365, 80);
+			this.BT_Mute.Name = "BT_Mute";
+			this.BT_Mute.Size = new System.Drawing.Size(45, 45);
+			this.BT_Mute.TabIndex = 5;
+			this.BT_Mute.Text = "Mute";
+			this.BT_Mute.UseVisualStyleBackColor = true;
+			// 
+			// TBR_GlobalVolume
+			// 
+			this.TBR_GlobalVolume.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.TBR_GlobalVolume.Location = new System.Drawing.Point(107, 80);
+			this.TBR_GlobalVolume.Maximum = 100;
+			this.TBR_GlobalVolume.Name = "TBR_GlobalVolume";
+			this.TBR_GlobalVolume.Size = new System.Drawing.Size(208, 45);
+			this.TBR_GlobalVolume.TabIndex = 6;
+			this.TBR_GlobalVolume.TickStyle = System.Windows.Forms.TickStyle.Both;
+			this.TBR_GlobalVolume.Value = 100;
+			// 
+			// BT_Deafen
+			// 
+			this.BT_Deafen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.BT_Deafen.Location = new System.Drawing.Point(416, 80);
+			this.BT_Deafen.Name = "BT_Deafen";
+			this.BT_Deafen.Size = new System.Drawing.Size(45, 45);
+			this.BT_Deafen.TabIndex = 4;
+			this.BT_Deafen.Text = "Deafen";
+			this.BT_Deafen.UseVisualStyleBackColor = true;
+			// 
+			// LBL_AudioOutputs
+			// 
+			this.LBL_AudioOutputs.AutoSize = true;
+			this.LBL_AudioOutputs.Location = new System.Drawing.Point(6, 54);
+			this.LBL_AudioOutputs.Name = "LBL_AudioOutputs";
+			this.LBL_AudioOutputs.Size = new System.Drawing.Size(89, 15);
+			this.LBL_AudioOutputs.TabIndex = 3;
+			this.LBL_AudioOutputs.Text = "Output Device :";
 			// 
 			// LBL_AudioInputs
 			// 
@@ -172,9 +235,9 @@ namespace EorzeansVoice {
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.GPB_Around.Controls.Add(this.PAN_AroundContent);
-			this.GPB_Around.Location = new System.Drawing.Point(12, 290);
+			this.GPB_Around.Location = new System.Drawing.Point(12, 268);
 			this.GPB_Around.Name = "GPB_Around";
-			this.GPB_Around.Size = new System.Drawing.Size(467, 298);
+			this.GPB_Around.Size = new System.Drawing.Size(467, 320);
 			this.GPB_Around.TabIndex = 7;
 			this.GPB_Around.TabStop = false;
 			this.GPB_Around.Text = "Around";
@@ -186,9 +249,9 @@ namespace EorzeansVoice {
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.PAN_AroundContent.AutoScroll = true;
 			this.PAN_AroundContent.BackColor = System.Drawing.Color.Transparent;
-			this.PAN_AroundContent.Location = new System.Drawing.Point(0, 7);
+			this.PAN_AroundContent.Location = new System.Drawing.Point(0, 22);
 			this.PAN_AroundContent.Name = "PAN_AroundContent";
-			this.PAN_AroundContent.Size = new System.Drawing.Size(467, 291);
+			this.PAN_AroundContent.Size = new System.Drawing.Size(467, 298);
 			this.PAN_AroundContent.TabIndex = 0;
 			// 
 			// TIM_UpdateControls
@@ -215,6 +278,7 @@ namespace EorzeansVoice {
 			this.GPB_Process.ResumeLayout(false);
 			this.GPB_Audio.ResumeLayout(false);
 			this.GPB_Audio.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.TBR_GlobalVolume)).EndInit();
 			this.GPB_Around.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -227,7 +291,7 @@ namespace EorzeansVoice {
 		private System.Windows.Forms.Button BT_SelectProcess;
 		private System.Windows.Forms.Timer TIM_Process;
 		private System.Windows.Forms.GroupBox GPB_Audio;
-		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label LBL_AudioOutputs;
 		private System.Windows.Forms.Label LBL_AudioInputs;
 		private System.Windows.Forms.ComboBox CBB_AudioOutputs;
 		private System.Windows.Forms.ComboBox CBB_AudioInputs;
@@ -237,6 +301,11 @@ namespace EorzeansVoice {
 		private System.Windows.Forms.GroupBox GPB_Around;
 		private System.Windows.Forms.Timer TIM_UpdateControls;
 		private System.Windows.Forms.Panel PAN_AroundContent;
+		private System.Windows.Forms.TrackBar TBR_GlobalVolume;
+		private System.Windows.Forms.Button BT_Mute;
+		private System.Windows.Forms.Button BT_Deafen;
+		private System.Windows.Forms.Label LBL_GlobalVolume;
+		private System.Windows.Forms.Label LBL_GlobalVolumeName;
 	}
 }
 
