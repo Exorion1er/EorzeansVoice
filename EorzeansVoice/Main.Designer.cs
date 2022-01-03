@@ -221,12 +221,12 @@ namespace EorzeansVoice {
 			// 
 			// TIM_SendInfo
 			// 
-			this.TIM_SendInfo.Interval = 500;
+			this.TIM_SendInfo.Interval = 200;
 			this.TIM_SendInfo.Tick += new System.EventHandler(this.SendInfoTick);
 			// 
 			// TIM_KeepAlive
 			// 
-			this.TIM_KeepAlive.Interval = 5000;
+			this.TIM_KeepAlive.Interval = 1000;
 			this.TIM_KeepAlive.Tick += new System.EventHandler(this.KeepAliveTick);
 			// 
 			// GPB_Around

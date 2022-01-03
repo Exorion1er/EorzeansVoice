@@ -25,6 +25,7 @@ namespace EorzeansVoice {
 		public List<ClientAround> around = new List<ClientAround>();
 
 		private UpdateServer infoCache;
+		private DateTime lastSent;
 		private Process gameProcess;
 		private bool processUpdateName = false;
 
@@ -88,6 +89,7 @@ namespace EorzeansVoice {
 				AudioController.StartAudio();
 				Network.StartReceivingData();
 
+				lastSent = DateTime.Now;
 				LBL_Status.Text = "Connected !";
 				TIM_KeepAlive.Enabled = true;
 				TIM_SendInfo.Enabled = true;
@@ -171,6 +173,7 @@ namespace EorzeansVoice {
 
 			if (infoCache != newInfo) {
 				infoCache = newInfo;
+				lastSent = DateTime.Now;
 				Network.SendInfoToServer(newInfo);
 			}
 		}
@@ -212,8 +215,10 @@ namespace EorzeansVoice {
 		}
 
 		private void KeepAliveTick(object sender, EventArgs e) {
-			// OPTIMIZATION : Only send if nothing was sent in the last 5s
-			Network.SendKeepAlive(userID);
+			if (DateTime.Now - lastSent >= TimeSpan.FromSeconds(5)) {
+				lastSent = DateTime.Now;
+				Network.SendKeepAlive(userID);
+			}
 		}
 
 		private void Main_FormClosing(object sender, FormClosingEventArgs e) {
