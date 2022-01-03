@@ -29,11 +29,10 @@ namespace EorzeansVoice {
 
 		public Main() {
 			InitializeComponent();
+			instance = this;
 		}
 
 		private void Main_Load(object sender, EventArgs e) {
-			instance = this;
-
 			if (!Network.IsNetworkWorking()) {
 				MessageBox.Show("Couldn't establish a connection with the internet. Please check your internet connection.");
 				Application.Exit();
