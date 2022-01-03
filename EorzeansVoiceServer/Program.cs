@@ -160,7 +160,11 @@ namespace EorzeansVoiceServer {
 			List<ClientInfo> infoOfAround = ClientInfo.FromClients(client.GetAround(clients));
 
 			if (verboseLogging) {
-				Console.WriteLine(Prefix() + "Received update from " + client.ToString() + ", replying with info of " + infoOfAround.Count + " users around them.");
+				string verboseSuffix = ", not replying because there is no one around them.";
+				if (infoOfAround.Count > 0) {
+					verboseSuffix = ", replying with info of " + infoOfAround.Count + " users around them.";
+				}
+				Console.WriteLine(Prefix() + "Received update from " + client.ToString() + verboseSuffix);
 			}
 
 			if (infoOfAround.Count > 0) {
@@ -207,6 +211,10 @@ namespace EorzeansVoiceServer {
 				Console.WriteLine(Prefix() + "Received Keep Alive from non-existant client.");
 				ForceDisconnect(remoteEP, "KeepAlive");
 				return;
+			}
+
+			if (verboseLogging) {
+				Console.WriteLine(Prefix() + "Received Keep Alive from " + client.ToString());
 			}
 
 			client.lastReceived = DateTime.Now;
