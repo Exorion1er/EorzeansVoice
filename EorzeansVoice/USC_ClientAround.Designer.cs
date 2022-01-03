@@ -42,6 +42,7 @@ namespace EorzeansVoice {
 			this.BT_CA_Mute.TabIndex = 2;
 			this.BT_CA_Mute.Text = "Mute";
 			this.BT_CA_Mute.UseVisualStyleBackColor = true;
+			this.BT_CA_Mute.Click += new System.EventHandler(this.BT_CA_Mute_Click);
 			// 
 			// PAN_CA_Content
 			// 
@@ -89,6 +90,7 @@ namespace EorzeansVoice {
 			this.TBR_CA_Volume.TabIndex = 3;
 			this.TBR_CA_Volume.TickStyle = System.Windows.Forms.TickStyle.Both;
 			this.TBR_CA_Volume.Value = 100;
+			this.TBR_CA_Volume.Scroll += new System.EventHandler(this.TBR_CA_Volume_Scroll);
 			// 
 			// USC_ClientAround
 			// 

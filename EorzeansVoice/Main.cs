@@ -196,7 +196,8 @@ namespace EorzeansVoice {
 			foreach (ClientAround c in around) {
 				if (c.controls == null) {
 					USC_ClientAround newClientControls = new USC_ClientAround {
-						Dock = DockStyle.Top
+						Dock = DockStyle.Top,
+						Userame = c.name
 					};
 					PAN_AroundContent.Controls.Add(newClientControls);
 
