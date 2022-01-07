@@ -64,6 +64,7 @@ namespace EorzeansVoice {
 			AudioController.Device input = (AudioController.Device)CBB_AudioInputs.SelectedItem;
 			AudioController.Device output = (AudioController.Device)CBB_AudioOutputs.SelectedItem;
 			AudioController.Init(input, output);
+			AudioInputProcessing.Init(VSL_VoiceActivation.Volume);
 
 			LogInAndConnect();
 		}
@@ -224,6 +225,18 @@ namespace EorzeansVoice {
 		private void Main_FormClosing(object sender, FormClosingEventArgs e) {
 			AudioController.StopAudio();
 			Network.Disconnect(userID);
+		}
+
+		private void VoiceModeChanged(object sender, EventArgs e) {
+			if (RBT_VoiceActivation.Checked) {
+				AudioInputProcessing.mode = AudioInputProcessing.Mode.VoiceActivation;
+			} else if (RBT_PushToTalk.Checked) {
+				AudioInputProcessing.mode = AudioInputProcessing.Mode.PushToTalk;
+			}
+		}
+
+		private void VSL_VoiceActivation_VolumeChanged(object sender, EventArgs e) {
+			AudioInputProcessing.voiceActivationThreshold = VSL_VoiceActivation.Volume;
 		}
 	}
 }

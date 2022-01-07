@@ -28,7 +28,6 @@ namespace EorzeansVoice {
 		private static WaveIn input;
 		private static MixingWaveProvider32 mixer;
 		private static WaveOut output;
-		private static OpusEncoder encoder;
 		private static OpusDecoder decoder;
 
 		public static void LoadAudioDevices(ComboBox inputs, ComboBox outputs) {
@@ -92,15 +91,11 @@ namespace EorzeansVoice {
 			output.Init(mixer);
 			mixer.RemoveInputStream(p32);
 
-			encoder = new OpusEncoder(SamplingRate.Sampling48000, Channels.Stereo, OpusApplicationType.Voip, Delay.Delay20ms) {
-				Bitrate = 64 * 1024
-			};
-
 			decoder = new OpusDecoder(SamplingRate.Sampling48000, Channels.Stereo);
 		}
 
 		public static bool StartAudio() {
-			if (input == null || output == null || mixer == null || encoder == null || decoder == null) {
+			if (input == null || output == null || mixer == null || decoder == null) {
 				return false;
 			}
 
@@ -146,8 +141,7 @@ namespace EorzeansVoice {
 		}
 
 		private static void DataAvailable(object sender, WaveInEventArgs e) {
-			byte[] encoded = encoder.Encode(e.Buffer.ToShorts());
-			Network.SendVoiceToServer(encoded);
+			AudioInputProcessing.ProcessAudioInput(e.Buffer);
 		}
 
 		private static void RecordingStopped(object sender, StoppedEventArgs e) {

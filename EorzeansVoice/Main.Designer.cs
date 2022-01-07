@@ -31,6 +31,10 @@ namespace EorzeansVoice {
 			this.LBL_Process = new System.Windows.Forms.Label();
 			this.TIM_Process = new System.Windows.Forms.Timer(this.components);
 			this.GPB_Audio = new System.Windows.Forms.GroupBox();
+			this.BT_PTTKeybind = new System.Windows.Forms.Button();
+			this.VSL_VoiceActivation = new NAudio.Gui.VolumeSlider();
+			this.RBT_PushToTalk = new System.Windows.Forms.RadioButton();
+			this.RBT_VoiceActivation = new System.Windows.Forms.RadioButton();
 			this.LBL_GlobalVolume = new System.Windows.Forms.Label();
 			this.LBL_GlobalVolumeName = new System.Windows.Forms.Label();
 			this.BT_Mute = new System.Windows.Forms.Button();
@@ -111,6 +115,10 @@ namespace EorzeansVoice {
 			// 
 			this.GPB_Audio.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.GPB_Audio.Controls.Add(this.BT_PTTKeybind);
+			this.GPB_Audio.Controls.Add(this.VSL_VoiceActivation);
+			this.GPB_Audio.Controls.Add(this.RBT_PushToTalk);
+			this.GPB_Audio.Controls.Add(this.RBT_VoiceActivation);
 			this.GPB_Audio.Controls.Add(this.LBL_GlobalVolume);
 			this.GPB_Audio.Controls.Add(this.LBL_GlobalVolumeName);
 			this.GPB_Audio.Controls.Add(this.BT_Mute);
@@ -122,10 +130,59 @@ namespace EorzeansVoice {
 			this.GPB_Audio.Controls.Add(this.CBB_AudioInputs);
 			this.GPB_Audio.Location = new System.Drawing.Point(12, 127);
 			this.GPB_Audio.Name = "GPB_Audio";
-			this.GPB_Audio.Size = new System.Drawing.Size(467, 135);
+			this.GPB_Audio.Size = new System.Drawing.Size(467, 195);
 			this.GPB_Audio.TabIndex = 2;
 			this.GPB_Audio.TabStop = false;
 			this.GPB_Audio.Text = "Audio";
+			// 
+			// BT_PTTKeybind
+			// 
+			this.BT_PTTKeybind.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.BT_PTTKeybind.Location = new System.Drawing.Point(125, 160);
+			this.BT_PTTKeybind.Name = "BT_PTTKeybind";
+			this.BT_PTTKeybind.Size = new System.Drawing.Size(336, 23);
+			this.BT_PTTKeybind.TabIndex = 12;
+			this.BT_PTTKeybind.Text = "Unbound";
+			this.BT_PTTKeybind.UseVisualStyleBackColor = true;
+			// 
+			// VSL_VoiceActivation
+			// 
+			this.VSL_VoiceActivation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.VSL_VoiceActivation.Location = new System.Drawing.Point(125, 131);
+			this.VSL_VoiceActivation.Name = "VSL_VoiceActivation";
+			this.VSL_VoiceActivation.Size = new System.Drawing.Size(336, 23);
+			this.VSL_VoiceActivation.TabIndex = 11;
+			this.VSL_VoiceActivation.VolumeChanged += new System.EventHandler(this.VSL_VoiceActivation_VolumeChanged);
+			// 
+			// RBT_PushToTalk
+			// 
+			this.RBT_PushToTalk.AutoSize = true;
+			this.RBT_PushToTalk.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.RBT_PushToTalk.Location = new System.Drawing.Point(27, 162);
+			this.RBT_PushToTalk.Name = "RBT_PushToTalk";
+			this.RBT_PushToTalk.Size = new System.Drawing.Size(89, 19);
+			this.RBT_PushToTalk.TabIndex = 10;
+			this.RBT_PushToTalk.Text = "Push To Talk";
+			this.RBT_PushToTalk.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.RBT_PushToTalk.UseVisualStyleBackColor = true;
+			this.RBT_PushToTalk.CheckedChanged += new System.EventHandler(this.VoiceModeChanged);
+			// 
+			// RBT_VoiceActivation
+			// 
+			this.RBT_VoiceActivation.AutoSize = true;
+			this.RBT_VoiceActivation.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.RBT_VoiceActivation.Checked = true;
+			this.RBT_VoiceActivation.Location = new System.Drawing.Point(6, 133);
+			this.RBT_VoiceActivation.Name = "RBT_VoiceActivation";
+			this.RBT_VoiceActivation.Size = new System.Drawing.Size(110, 19);
+			this.RBT_VoiceActivation.TabIndex = 9;
+			this.RBT_VoiceActivation.TabStop = true;
+			this.RBT_VoiceActivation.Text = "Voice Activation";
+			this.RBT_VoiceActivation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			this.RBT_VoiceActivation.UseVisualStyleBackColor = true;
+			this.RBT_VoiceActivation.CheckedChanged += new System.EventHandler(this.VoiceModeChanged);
 			// 
 			// LBL_GlobalVolume
 			// 
@@ -235,9 +292,9 @@ namespace EorzeansVoice {
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.GPB_Around.Controls.Add(this.PAN_AroundContent);
-			this.GPB_Around.Location = new System.Drawing.Point(12, 268);
+			this.GPB_Around.Location = new System.Drawing.Point(12, 328);
 			this.GPB_Around.Name = "GPB_Around";
-			this.GPB_Around.Size = new System.Drawing.Size(467, 320);
+			this.GPB_Around.Size = new System.Drawing.Size(467, 260);
 			this.GPB_Around.TabIndex = 7;
 			this.GPB_Around.TabStop = false;
 			this.GPB_Around.Text = "Around";
@@ -251,7 +308,7 @@ namespace EorzeansVoice {
 			this.PAN_AroundContent.BackColor = System.Drawing.Color.Transparent;
 			this.PAN_AroundContent.Location = new System.Drawing.Point(0, 22);
 			this.PAN_AroundContent.Name = "PAN_AroundContent";
-			this.PAN_AroundContent.Size = new System.Drawing.Size(467, 298);
+			this.PAN_AroundContent.Size = new System.Drawing.Size(467, 238);
 			this.PAN_AroundContent.TabIndex = 0;
 			// 
 			// TIM_UpdateControls
@@ -306,6 +363,10 @@ namespace EorzeansVoice {
 		private System.Windows.Forms.Button BT_Deafen;
 		private System.Windows.Forms.Label LBL_GlobalVolume;
 		private System.Windows.Forms.Label LBL_GlobalVolumeName;
+		private System.Windows.Forms.Button BT_PTTKeybind;
+		private NAudio.Gui.VolumeSlider VSL_VoiceActivation;
+		private System.Windows.Forms.RadioButton RBT_PushToTalk;
+		private System.Windows.Forms.RadioButton RBT_VoiceActivation;
 	}
 }
 
