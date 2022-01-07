@@ -33,7 +33,7 @@ namespace EorzeansVoice {
 		}
 
 		private static void VoiceActivation(byte[] data) {
-			double decibels = NormalizeDB(MeasureDB(data));
+			float decibels = ((float)MeasureDB(data)).Normalize(-100, 0, 0, 1);
 
 			if (decibels >= voiceActivationThreshold) {
 				EncodeSend(data);
@@ -48,10 +48,6 @@ namespace EorzeansVoice {
 			}
 			double rms = Math.Sqrt(sum / (data.Length / 2));
 			return 20 * Math.Log10(rms);
-		}
-
-		private static float NormalizeDB(double value) {
-			return (float)(((value - -100) / (0 - -100) * (1 - 0)) + 0);
 		}
 
 		private static void EncodeSend(byte[] data) {
