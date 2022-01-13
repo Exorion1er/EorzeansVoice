@@ -4,7 +4,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace EorzeansVoice.Utils {
-	public partial class VolumeSlider : Control {
+	public partial class Slider : Control {
 		protected override Size DefaultSize {
 			get => new Size(100, 20);
 		}
@@ -73,7 +73,7 @@ namespace EorzeansVoice.Utils {
 		private bool moving = false;
 		private SizeF delta;
 
-		public VolumeSlider() {
+		public Slider() {
 			// This reduces flicker
 			DoubleBuffered = true;
 			RecalculateParameters();
