@@ -1,66 +1,138 @@
-﻿using System.ComponentModel;
+﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace EorzeansVoice.Utils {
-	public partial class VolumeSlider : UserControl {
+	public partial class VolumeSlider : Control {
+		protected override Size DefaultSize {
+			get => new Size(100, 20);
+		}
+
+		private float min = 0.0f;
+		public float Min {
+			get => min;
+			set {
+				min = value;
+				RecalculateParameters();
+			}
+		}
+
+		private float max = 1.0f;
+		public float Max {
+			get => max;
+			set {
+				max = value;
+				RecalculateParameters();
+			}
+		}
+
+		private float value = 0.3f;
 		public float Value {
-			get { return value; }
-			set { this.value = value; Invalidate(); }
+			get => value;
+			set {
+				this.value = value;
+				ValueChanged?.Invoke(this, EventArgs.Empty);
+				RecalculateParameters();
+			}
 		}
 
-		public Color BarColor {
-			get { return ((SolidBrush)barColor).Color; }
-			set { barColor = new SolidBrush(value); Invalidate(); }
+		private Color activeBarColor = SystemColors.ActiveCaption;
+		public Color ActivebarColor {
+			get => activeBarColor;
+			set {
+				activeBarColor = value;
+				Invalidate();
+			}
 		}
 
+		private Color inactiveBarColor = SystemColors.ControlDark;
+		public Color InactiveBarColor {
+			get => inactiveBarColor;
+			set {
+				inactiveBarColor = value;
+				Invalidate();
+			}
+		}
+
+		private Color handleColor = SystemColors.Highlight;
 		public Color HandleColor {
-			get { return ((SolidBrush)handleColor).Color; }
-			set { handleColor = new SolidBrush(value); Invalidate(); }
+			get => handleColor;
+			set {
+				handleColor = value;
+				Invalidate();
+			}
 		}
 
-		public float HandleWidth {
-			get { return handleWidth; }
-			set { handleWidth = value; Invalidate(); }
-		}
+		public event EventHandler ValueChanged;
 
-		private float value = 1f;
-		private Brush barColor = Brushes.Aquamarine;
-		private Brush handleColor = Brushes.AliceBlue;
-		private float handleWidth = 15f;
+		private float radius;
+		private PointF thumbPos;
+		private SizeF barSize;
+		private PointF barPos;
+		private bool moving = false;
+		private SizeF delta;
 
 		public VolumeSlider() {
-			InitializeComponent();
+			// This reduces flicker
+			DoubleBuffered = true;
+			RecalculateParameters();
 		}
 
-		protected override void OnPaint(PaintEventArgs pe) {
-			base.OnPaint(pe);
+		protected override void OnPaint(PaintEventArgs e) {
+			base.OnPaint(e);
 
-			DrawBar(pe, out float barWidth, out float barX);
-			DrawHandle(pe, barWidth, barX);
+			SolidBrush activeBarBrush = new SolidBrush(activeBarColor);
+			SolidBrush inactiveBarBrush = new SolidBrush(inactiveBarColor);
+			SolidBrush handleBrush = new SolidBrush(handleColor);
+
+			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+			e.Graphics.FillRectangle(inactiveBarBrush, barPos.X, barPos.Y, barSize.Width, barSize.Height);
+			e.Graphics.FillRectangle(activeBarBrush, barPos.X, barPos.Y, thumbPos.X - barPos.X, barSize.Height);
+
+			e.Graphics.FillCircle(handleBrush, thumbPos.X, thumbPos.Y, radius);
 		}
 
-		private void DrawBar(PaintEventArgs pe, out float barWidth, out float barX) {
-			float barHeightOffset = 15;
-			float barHeight = Height - barHeightOffset * 2;
-			float barWidthLeftOffset = 10;
-			float barWidthRightOffset = 10;
-			barWidth = Width - 1 - barWidthRightOffset - barWidthLeftOffset;
-			barX = barWidthLeftOffset;
-			float barY = Height / 2 - barHeight / 2;
-
-			pe.Graphics.FillRectangle(barColor, barX, barY, barWidth, barHeight);
-			pe.Graphics.DrawRectangle(Pens.LightGray, barX, barY, barWidth, barHeight);
+		protected override void OnResize(EventArgs e) {
+			base.OnResize(e);
+			RecalculateParameters();
 		}
 
-		private void DrawHandle(PaintEventArgs pe, float barWidth, float barX) {
-			float handleHeightOffset = 5;
-			float handleHeight = Height - handleHeightOffset * 2;
-			float handleX = value.Normalize(0, 1, barX - handleWidth / 2, barWidth);
-			float handleY = Height / 2 - handleHeight / 2;
+		private void RecalculateParameters() {
+			radius = 0.5f * (ClientSize.Height - 1);
+			barSize = new SizeF(ClientSize.Width - 2f * radius, 0.5f * ClientSize.Height);
+			barPos = new PointF(radius, (ClientSize.Height - barSize.Height) / 2);
+			thumbPos = new PointF(barSize.Width / (Max - Min) * Value + barPos.X, barPos.Y + 0.5f * barSize.Height);
+			Invalidate();
+		}
 
-			pe.Graphics.FillEllipse(handleColor, handleX, handleY, handleWidth, handleHeight);
-			pe.Graphics.DrawEllipse(Pens.Gray, handleX, handleY, handleWidth, handleHeight);
+		protected override void OnMouseDown(MouseEventArgs e) {
+			base.OnMouseDown(e);
+
+			// Difference between tumb and mouse position.
+			delta = new SizeF(e.Location.X - thumbPos.X, e.Location.Y - thumbPos.Y);
+			if (delta.Width * delta.Width + delta.Height * delta.Height <= radius * radius) {
+				// Clicking inside thumb.
+				moving = true;
+			}
+		}
+
+		protected override void OnMouseMove(MouseEventArgs e) {
+			base.OnMouseMove(e);
+			if (moving) {
+				float thumbX = e.Location.X - delta.Width;
+				if (thumbX < barPos.X) {
+					thumbX = barPos.X;
+				} else if (thumbX > barPos.X + barSize.Width) {
+					thumbX = barPos.X + barSize.Width;
+				}
+				Value = (thumbX - barPos.X) * (Max - Min) / barSize.Width;
+			}
+		}
+
+		protected override void OnMouseUp(MouseEventArgs e) {
+			base.OnMouseUp(e);
+			moving = false;
 		}
 	}
 }

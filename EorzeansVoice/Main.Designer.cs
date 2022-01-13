@@ -49,13 +49,11 @@ namespace EorzeansVoice {
 			this.TIM_KeepAlive = new System.Windows.Forms.Timer(this.components);
 			this.GPB_Around = new System.Windows.Forms.GroupBox();
 			this.PAN_AroundContent = new System.Windows.Forms.Panel();
-			this.volumeSlider1 = new EorzeansVoice.Utils.VolumeSlider();
 			this.TIM_UpdateControls = new System.Windows.Forms.Timer(this.components);
 			this.GPB_Process.SuspendLayout();
 			this.GPB_Audio.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.TBR_GlobalVolume)).BeginInit();
 			this.GPB_Around.SuspendLayout();
-			this.PAN_AroundContent.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// LBL_Status
@@ -308,23 +306,10 @@ namespace EorzeansVoice {
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.PAN_AroundContent.AutoScroll = true;
 			this.PAN_AroundContent.BackColor = System.Drawing.Color.Transparent;
-			this.PAN_AroundContent.Controls.Add(this.volumeSlider1);
 			this.PAN_AroundContent.Location = new System.Drawing.Point(0, 22);
 			this.PAN_AroundContent.Name = "PAN_AroundContent";
 			this.PAN_AroundContent.Size = new System.Drawing.Size(467, 238);
 			this.PAN_AroundContent.TabIndex = 0;
-			// 
-			// volumeSlider1
-			// 
-			this.volumeSlider1.BarColor = System.Drawing.SystemColors.ControlLight;
-			this.volumeSlider1.HandleColor = System.Drawing.SystemColors.Highlight;
-			this.volumeSlider1.HandleWidth = 15F;
-			this.volumeSlider1.Location = new System.Drawing.Point(64, 55);
-			this.volumeSlider1.MinimumSize = new System.Drawing.Size(50, 40);
-			this.volumeSlider1.Name = "volumeSlider1";
-			this.volumeSlider1.Size = new System.Drawing.Size(306, 40);
-			this.volumeSlider1.TabIndex = 0;
-			this.volumeSlider1.Value = 1F;
 			// 
 			// TIM_UpdateControls
 			// 
@@ -352,7 +337,6 @@ namespace EorzeansVoice {
 			this.GPB_Audio.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.TBR_GlobalVolume)).EndInit();
 			this.GPB_Around.ResumeLayout(false);
-			this.PAN_AroundContent.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -383,7 +367,6 @@ namespace EorzeansVoice {
 		private NAudio.Gui.VolumeSlider VSL_VoiceActivation;
 		private System.Windows.Forms.RadioButton RBT_PushToTalk;
 		private System.Windows.Forms.RadioButton RBT_VoiceActivation;
-		private Utils.VolumeSlider volumeSlider1;
 	}
 }
 
