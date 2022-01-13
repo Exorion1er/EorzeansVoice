@@ -25,6 +25,7 @@ namespace EorzeansVoice {
 		/// </summary>
 		private void InitializeComponent() {
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
 			this.LBL_Status = new System.Windows.Forms.Label();
 			this.GPB_Process = new System.Windows.Forms.GroupBox();
 			this.BT_SelectProcess = new System.Windows.Forms.Button();
@@ -138,7 +139,7 @@ namespace EorzeansVoice {
 			// SLD_VoiceActivation
 			// 
 			this.SLD_VoiceActivation.ActivebarColor = System.Drawing.SystemColors.ActiveCaption;
-			this.SLD_VoiceActivation.ActiveValue = 0F;
+			this.SLD_VoiceActivation.ActiveValue = 0.3F;
 			this.SLD_VoiceActivation.HandleColor = System.Drawing.SystemColors.Highlight;
 			this.SLD_VoiceActivation.InactiveBarColor = System.Drawing.SystemColors.ControlDark;
 			this.SLD_VoiceActivation.Location = new System.Drawing.Point(125, 131);
@@ -332,6 +333,8 @@ namespace EorzeansVoice {
 			this.Controls.Add(this.GPB_Audio);
 			this.Controls.Add(this.GPB_Process);
 			this.Controls.Add(this.LBL_Status);
+			this.DoubleBuffered = true;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.Name = "Main";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

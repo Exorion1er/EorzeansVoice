@@ -24,6 +24,7 @@ namespace EorzeansVoice {
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProcessSelectionWindow));
 			this.CBB_PF_Processes = new System.Windows.Forms.ComboBox();
 			this.BT_PF_Confirm = new System.Windows.Forms.Button();
 			this.LBL_PF_One = new System.Windows.Forms.Label();
@@ -59,7 +60,7 @@ namespace EorzeansVoice {
 			this.LBL_PF_One.TabIndex = 2;
 			this.LBL_PF_One.Text = "Please select FFXIV\'s process";
 			// 
-			// ProcessFinder
+			// ProcessSelectionWindow
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -68,8 +69,9 @@ namespace EorzeansVoice {
 			this.Controls.Add(this.BT_PF_Confirm);
 			this.Controls.Add(this.CBB_PF_Processes);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
-			this.Name = "ProcessFinder";
+			this.Name = "ProcessSelectionWindow";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Select FFXIV\'s process";
 			this.Load += new System.EventHandler(this.ProcessFinder_Load);
