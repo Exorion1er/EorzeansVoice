@@ -215,11 +215,12 @@ namespace EorzeansVoice {
 			// BT_Mute
 			// 
 			this.BT_Mute.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.BT_Mute.BackgroundImage = global::EorzeansVoice.Properties.Resources.Speaking;
+			this.BT_Mute.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.BT_Mute.Location = new System.Drawing.Point(365, 80);
 			this.BT_Mute.Name = "BT_Mute";
 			this.BT_Mute.Size = new System.Drawing.Size(45, 45);
 			this.BT_Mute.TabIndex = 5;
-			this.BT_Mute.Text = "Mute";
 			this.BT_Mute.UseVisualStyleBackColor = true;
 			// 
 			// TBR_GlobalVolume
@@ -237,11 +238,12 @@ namespace EorzeansVoice {
 			// BT_Deafen
 			// 
 			this.BT_Deafen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.BT_Deafen.BackgroundImage = global::EorzeansVoice.Properties.Resources.Listening;
+			this.BT_Deafen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.BT_Deafen.Location = new System.Drawing.Point(416, 80);
 			this.BT_Deafen.Name = "BT_Deafen";
 			this.BT_Deafen.Size = new System.Drawing.Size(45, 45);
 			this.BT_Deafen.TabIndex = 4;
-			this.BT_Deafen.Text = "Deafen";
 			this.BT_Deafen.UseVisualStyleBackColor = true;
 			// 
 			// LBL_AudioOutputs
