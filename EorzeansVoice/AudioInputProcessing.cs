@@ -12,7 +12,9 @@ namespace EorzeansVoice {
 
 		public static Mode mode;
 		public static float voiceActivationThreshold;
-		public static OpusEncoder encoder;
+		public static bool muted = false;
+
+		private static OpusEncoder encoder;
 
 		public static void Init(float threshold) {
 			voiceActivationThreshold = threshold;
@@ -33,10 +35,10 @@ namespace EorzeansVoice {
 		}
 
 		private static void VoiceActivation(byte[] data) {
-			float decibels = ((float)MeasureDB(data)).Normalize(-100, 0, 0, 1);
-			Main.instance.UpdateVoiceActivationSlider(decibels);
+			float volume = ((float)MeasureDB(data)).Normalize(-100, 0, 0, 1);
+			Main.instance.UpdateVoiceActivationSlider(volume);
 
-			if (decibels >= voiceActivationThreshold) {
+			if (!muted && volume >= voiceActivationThreshold) {
 				EncodeSend(data);
 			}
 		}

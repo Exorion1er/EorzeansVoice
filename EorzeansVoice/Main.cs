@@ -242,5 +242,15 @@ namespace EorzeansVoice {
 		public void UpdateVoiceActivationSlider(float value) {
 			SLD_VoiceActivation.ActiveValue = value;
 		}
+
+		private void BT_Mute_Click(object sender, EventArgs e) {
+			if (AudioInputProcessing.muted) {
+				AudioInputProcessing.muted = false;
+				BT_Mute.BackgroundImage = Properties.Resources.Speaking;
+			} else {
+				AudioInputProcessing.muted = true;
+				BT_Mute.BackgroundImage = Properties.Resources.Muted;
+			}
+		}
 	}
 }

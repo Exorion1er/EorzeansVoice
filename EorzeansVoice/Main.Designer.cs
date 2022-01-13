@@ -222,6 +222,7 @@ namespace EorzeansVoice {
 			this.BT_Mute.Size = new System.Drawing.Size(45, 45);
 			this.BT_Mute.TabIndex = 5;
 			this.BT_Mute.UseVisualStyleBackColor = true;
+			this.BT_Mute.Click += new System.EventHandler(this.BT_Mute_Click);
 			// 
 			// TBR_GlobalVolume
 			// 
