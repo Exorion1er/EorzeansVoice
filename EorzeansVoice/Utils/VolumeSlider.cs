@@ -37,6 +37,26 @@ namespace EorzeansVoice.Utils {
 			}
 		}
 
+		private bool useActiveValue = false;
+		public bool UseActiveValue {
+			get => useActiveValue;
+			set {
+				useActiveValue = value;
+				RecalculateParameters();
+			}
+		}
+
+		private float activeValue = 0.3f;
+		public float ActiveValue {
+			get => useActiveValue ? activeValue : value;
+			set {
+				if (useActiveValue) {
+					activeValue = value;
+					RecalculateParameters();
+				}
+			}
+		}
+
 		private Color activeBarColor = SystemColors.ActiveCaption;
 		public Color ActivebarColor {
 			get => activeBarColor;
@@ -68,6 +88,7 @@ namespace EorzeansVoice.Utils {
 
 		private float radius;
 		private PointF thumbPos;
+		private PointF activePos;
 		private SizeF barSize;
 		private PointF barPos;
 		private bool moving = false;
@@ -88,7 +109,7 @@ namespace EorzeansVoice.Utils {
 
 			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 			e.Graphics.FillRectangle(inactiveBarBrush, barPos.X, barPos.Y, barSize.Width, barSize.Height);
-			e.Graphics.FillRectangle(activeBarBrush, barPos.X, barPos.Y, thumbPos.X - barPos.X, barSize.Height);
+			e.Graphics.FillRectangle(activeBarBrush, barPos.X, barPos.Y, activePos.X - barPos.X, barSize.Height);
 
 			e.Graphics.FillCircle(handleBrush, thumbPos.X, thumbPos.Y, radius);
 		}
@@ -99,10 +120,13 @@ namespace EorzeansVoice.Utils {
 		}
 
 		private void RecalculateParameters() {
+			float valueToUse = useActiveValue ? activeValue : value;
+
 			radius = 0.5f * (ClientSize.Height - 1);
 			barSize = new SizeF(ClientSize.Width - 2f * radius, 0.5f * ClientSize.Height);
 			barPos = new PointF(radius, (ClientSize.Height - barSize.Height) / 2);
-			thumbPos = new PointF(barSize.Width / (Max - Min) * Value + barPos.X, barPos.Y + 0.5f * barSize.Height);
+			thumbPos = new PointF(barSize.Width / (max - min) * value + barPos.X, barPos.Y + 0.5f * barSize.Height);
+			activePos = new PointF(barSize.Width / (max - min) * valueToUse + barPos.X, barPos.Y + 0.5F * barSize.Height);
 			Invalidate();
 		}
 
