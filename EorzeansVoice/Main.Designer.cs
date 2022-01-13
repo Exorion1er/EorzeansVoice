@@ -31,8 +31,8 @@ namespace EorzeansVoice {
 			this.LBL_Process = new System.Windows.Forms.Label();
 			this.TIM_Process = new System.Windows.Forms.Timer(this.components);
 			this.GPB_Audio = new System.Windows.Forms.GroupBox();
+			this.SLD_VoiceActivation = new EorzeansVoice.Utils.Slider();
 			this.BT_PTTKeybind = new System.Windows.Forms.Button();
-			this.VSL_VoiceActivation = new NAudio.Gui.VolumeSlider();
 			this.RBT_PushToTalk = new System.Windows.Forms.RadioButton();
 			this.RBT_VoiceActivation = new System.Windows.Forms.RadioButton();
 			this.LBL_GlobalVolume = new System.Windows.Forms.Label();
@@ -115,8 +115,8 @@ namespace EorzeansVoice {
 			// 
 			this.GPB_Audio.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.GPB_Audio.Controls.Add(this.SLD_VoiceActivation);
 			this.GPB_Audio.Controls.Add(this.BT_PTTKeybind);
-			this.GPB_Audio.Controls.Add(this.VSL_VoiceActivation);
 			this.GPB_Audio.Controls.Add(this.RBT_PushToTalk);
 			this.GPB_Audio.Controls.Add(this.RBT_VoiceActivation);
 			this.GPB_Audio.Controls.Add(this.LBL_GlobalVolume);
@@ -135,6 +135,23 @@ namespace EorzeansVoice {
 			this.GPB_Audio.TabStop = false;
 			this.GPB_Audio.Text = "Audio";
 			// 
+			// SLD_VoiceActivation
+			// 
+			this.SLD_VoiceActivation.ActivebarColor = System.Drawing.SystemColors.ActiveCaption;
+			this.SLD_VoiceActivation.ActiveValue = 0F;
+			this.SLD_VoiceActivation.HandleColor = System.Drawing.SystemColors.Highlight;
+			this.SLD_VoiceActivation.InactiveBarColor = System.Drawing.SystemColors.ControlDark;
+			this.SLD_VoiceActivation.Location = new System.Drawing.Point(125, 131);
+			this.SLD_VoiceActivation.Max = 1F;
+			this.SLD_VoiceActivation.Min = 0F;
+			this.SLD_VoiceActivation.Name = "SLD_VoiceActivation";
+			this.SLD_VoiceActivation.Size = new System.Drawing.Size(336, 23);
+			this.SLD_VoiceActivation.TabIndex = 13;
+			this.SLD_VoiceActivation.Text = "slider1";
+			this.SLD_VoiceActivation.UseActiveValue = true;
+			this.SLD_VoiceActivation.Value = 0.7F;
+			this.SLD_VoiceActivation.ValueChanged += new System.EventHandler(this.SLD_VoiceActivation_ValueChanged);
+			// 
 			// BT_PTTKeybind
 			// 
 			this.BT_PTTKeybind.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -145,16 +162,6 @@ namespace EorzeansVoice {
 			this.BT_PTTKeybind.TabIndex = 12;
 			this.BT_PTTKeybind.Text = "Unbound";
 			this.BT_PTTKeybind.UseVisualStyleBackColor = true;
-			// 
-			// VSL_VoiceActivation
-			// 
-			this.VSL_VoiceActivation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.VSL_VoiceActivation.Location = new System.Drawing.Point(125, 131);
-			this.VSL_VoiceActivation.Name = "VSL_VoiceActivation";
-			this.VSL_VoiceActivation.Size = new System.Drawing.Size(336, 23);
-			this.VSL_VoiceActivation.TabIndex = 11;
-			this.VSL_VoiceActivation.VolumeChanged += new System.EventHandler(this.VSL_VoiceActivation_VolumeChanged);
 			// 
 			// RBT_PushToTalk
 			// 
@@ -364,9 +371,9 @@ namespace EorzeansVoice {
 		private System.Windows.Forms.Label LBL_GlobalVolume;
 		private System.Windows.Forms.Label LBL_GlobalVolumeName;
 		private System.Windows.Forms.Button BT_PTTKeybind;
-		private NAudio.Gui.VolumeSlider VSL_VoiceActivation;
 		private System.Windows.Forms.RadioButton RBT_PushToTalk;
 		private System.Windows.Forms.RadioButton RBT_VoiceActivation;
+		private Utils.Slider SLD_VoiceActivation;
 	}
 }
 

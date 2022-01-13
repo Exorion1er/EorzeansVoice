@@ -64,7 +64,7 @@ namespace EorzeansVoice {
 			AudioController.Device input = (AudioController.Device)CBB_AudioInputs.SelectedItem;
 			AudioController.Device output = (AudioController.Device)CBB_AudioOutputs.SelectedItem;
 			AudioController.Init(input, output);
-			AudioInputProcessing.Init(VSL_VoiceActivation.Volume);
+			AudioInputProcessing.Init(SLD_VoiceActivation.Value);
 
 			LogInAndConnect();
 		}
@@ -235,8 +235,12 @@ namespace EorzeansVoice {
 			}
 		}
 
-		private void VSL_VoiceActivation_VolumeChanged(object sender, EventArgs e) {
-			AudioInputProcessing.voiceActivationThreshold = VSL_VoiceActivation.Volume;
+		private void SLD_VoiceActivation_ValueChanged(object sender, EventArgs e) {
+			AudioInputProcessing.voiceActivationThreshold = SLD_VoiceActivation.Value;
+		}
+
+		public void UpdateVoiceActivationSlider(float value) {
+			SLD_VoiceActivation.ActiveValue = value;
 		}
 	}
 }

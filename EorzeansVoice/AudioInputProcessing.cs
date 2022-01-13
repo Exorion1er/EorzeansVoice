@@ -34,6 +34,7 @@ namespace EorzeansVoice {
 
 		private static void VoiceActivation(byte[] data) {
 			float decibels = ((float)MeasureDB(data)).Normalize(-100, 0, 0, 1);
+			Main.instance.UpdateVoiceActivationSlider(decibels);
 
 			if (decibels >= voiceActivationThreshold) {
 				EncodeSend(data);
