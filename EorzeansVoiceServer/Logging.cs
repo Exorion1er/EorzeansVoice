@@ -16,16 +16,17 @@ namespace EorzeansVoiceServer {
 
 		private static void Log(LogType type, string message) {
 			if ((int)console <= (int)type) {
-				Console.WriteLine(Prefix() + message);
+				Console.WriteLine(Prefix(type) + message);
 			}
 
 			if ((int)file <= (int)type) {
-				File.AppendAllLinesAsync(fileName, new string[] { Prefix() + message });
+				string fname = fileName + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
+				File.AppendAllLinesAsync(fname, new string[] { Prefix(type) + message });
 			}
 		}
 
-		private static string Prefix() {
-			return "[" + DateTime.Now.ToString("T") + "] ";
+		private static string Prefix(LogType type) {
+			return "[" + DateTime.Now.ToString("HH:mm:ss.fff") + "][" + type.ToString() + "] ";
 		}
 
 		public static void Debug(string message) {
