@@ -140,6 +140,8 @@ namespace EorzeansVoice {
 			// 
 			this.SLD_VoiceActivation.ActivebarColor = System.Drawing.SystemColors.ActiveCaption;
 			this.SLD_VoiceActivation.ActiveValue = 0.3F;
+			this.SLD_VoiceActivation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.SLD_VoiceActivation.HandleColor = System.Drawing.SystemColors.Highlight;
 			this.SLD_VoiceActivation.InactiveBarColor = System.Drawing.SystemColors.ControlDark;
 			this.SLD_VoiceActivation.Location = new System.Drawing.Point(125, 131);
