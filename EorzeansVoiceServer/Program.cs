@@ -198,6 +198,7 @@ namespace EorzeansVoiceServer {
 					continue;
 				}
 
+				// TODO : Check if remoteEP is valid, otherwise it prints error
 				IPEndPoint remoteEPcurrent = new IPEndPoint(IPAddress.Parse(c.ipAddress), c.port);
 				udpClient.SendAsync(toSend, toSend.Length, remoteEPcurrent);
 			}

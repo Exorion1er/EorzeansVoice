@@ -25,7 +25,7 @@ namespace EorzeansVoice {
 		}
 
 		private static readonly MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
-		private static WaveIn input;
+		private static WaveInEvent input;
 		private static MixingWaveProvider32 mixer;
 		private static WaveOut output;
 		private static OpusDecoder decoder;
@@ -69,7 +69,7 @@ namespace EorzeansVoice {
 		}
 
 		public static void Init(Device inputDevice, Device outputDevice) {
-			input = new WaveIn {
+			input = new WaveInEvent {
 				DeviceNumber = inputDevice.id,
 				BufferMilliseconds = 20
 			};
@@ -83,15 +83,22 @@ namespace EorzeansVoice {
 			};
 			output.PlaybackStopped += PlaybackStopped;
 
-			// Hacky way of setting the WaveOut sampling rate to 48000 before adding any channel to the mixer
 			mixer = new MixingWaveProvider32();
-			BufferedWaveProvider p = new BufferedWaveProvider(input.WaveFormat);
-			Wave16ToFloatProvider p32 = new Wave16ToFloatProvider(p);
-			mixer.AddInputStream(p32);
-			output.Init(mixer);
-			mixer.RemoveInputStream(p32);
-
 			decoder = new OpusDecoder(SamplingRate.Sampling48000, Channels.Stereo);
+		}
+
+		private static void OutputPlay() {
+			if (mixer.InputCount == 0) {
+				// Hacky way of setting the WaveOut sampling rate to 48000 before adding any channel to the mixer
+				BufferedWaveProvider p = new BufferedWaveProvider(input.WaveFormat);
+				Wave16ToFloatProvider p32 = new Wave16ToFloatProvider(p);
+				mixer.AddInputStream(p32);
+				output.Init(mixer);
+				mixer.RemoveInputStream(p32);
+			} else {
+				output.Init(mixer);
+			}
+			output.Play();
 		}
 
 		public static bool StartAudio() {
@@ -100,7 +107,7 @@ namespace EorzeansVoice {
 			}
 
 			input.StartRecording();
-			output.Play();
+			OutputPlay();
 			return true;
 		}
 
@@ -130,14 +137,22 @@ namespace EorzeansVoice {
 			return new Tuple<BufferedWaveProvider, WaveChannel32>(waveProvider, channel);
 		}
 
-		public static void StopAudio() {
-			if (output != null) {
-				output.Stop();
+		public static void ChangeInputDevice(Device d) {
+			if (input == null) {
+				return;
 			}
 
-			if (input != null) {
-				input.StopRecording();
+			input.DeviceNumber = d.id;
+			input.StopRecording();
+		}
+
+		public static void ChangeOutputDevice(Device d) {
+			if (output == null) {
+				return;
 			}
+
+			output.DeviceNumber = d.id;
+			output.Stop();
 		}
 
 		private static void DataAvailable(object sender, WaveInEventArgs e) {
@@ -145,17 +160,21 @@ namespace EorzeansVoice {
 		}
 
 		private static void RecordingStopped(object sender, StoppedEventArgs e) {
-			MessageBox.Show("RecordingStopped");
-			StopAudio();
-
-			// TODO : Restart recording instead of stopping all
+			if (e?.Exception != null) {
+				MessageBox.Show("An error occured while recording : " + e.Exception.Message);
+				Application.Exit();
+			} else { // Stopped recording manually
+				input.StartRecording();
+			}
 		}
 
 		private static void PlaybackStopped(object sender, StoppedEventArgs e) {
-			MessageBox.Show("PlaybackStopped");
-			StopAudio();
-
-			// TODO : Restart playback instead of stopping all
+			if (e?.Exception != null) {
+				MessageBox.Show("An error occured while playing : " + e.Exception.Message);
+				Application.Exit();
+			} else { // Stopped playing manually
+				OutputPlay();
+			}
 		}
 	}
 }

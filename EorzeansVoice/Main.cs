@@ -223,7 +223,6 @@ namespace EorzeansVoice {
 		}
 
 		private void Main_FormClosing(object sender, FormClosingEventArgs e) {
-			AudioController.StopAudio();
 			Network.Disconnect(userID);
 		}
 
@@ -250,6 +249,18 @@ namespace EorzeansVoice {
 			} else {
 				AudioInputProcessing.muted = true;
 				BT_Mute.BackgroundImage = Properties.Resources.Muted;
+			}
+		}
+
+		private void CBB_AudioInputs_SelectedIndexChanged(object sender, EventArgs e) {
+			if (CBB_AudioInputs.SelectedItem != null) {
+				AudioController.ChangeInputDevice((AudioController.Device)CBB_AudioInputs.SelectedItem);
+			}
+		}
+
+		private void CBB_AudioOutputs_SelectedIndexChanged(object sender, EventArgs e) {
+			if (CBB_AudioOutputs.SelectedItem != null) {
+				AudioController.ChangeOutputDevice((AudioController.Device)CBB_AudioOutputs.SelectedItem);
 			}
 		}
 	}

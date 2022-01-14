@@ -277,6 +277,7 @@ namespace EorzeansVoice {
 			this.CBB_AudioOutputs.Name = "CBB_AudioOutputs";
 			this.CBB_AudioOutputs.Size = new System.Drawing.Size(354, 23);
 			this.CBB_AudioOutputs.TabIndex = 1;
+			this.CBB_AudioOutputs.SelectedIndexChanged += new System.EventHandler(this.CBB_AudioOutputs_SelectedIndexChanged);
 			// 
 			// CBB_AudioInputs
 			// 
@@ -288,6 +289,7 @@ namespace EorzeansVoice {
 			this.CBB_AudioInputs.Name = "CBB_AudioInputs";
 			this.CBB_AudioInputs.Size = new System.Drawing.Size(354, 23);
 			this.CBB_AudioInputs.TabIndex = 0;
+			this.CBB_AudioInputs.SelectedIndexChanged += new System.EventHandler(this.CBB_AudioInputs_SelectedIndexChanged);
 			// 
 			// TIM_SendInfo
 			// 
