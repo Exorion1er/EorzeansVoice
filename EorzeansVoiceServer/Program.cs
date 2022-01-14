@@ -191,16 +191,18 @@ namespace EorzeansVoiceServer {
 			Network.SendMessage(msg, remoteEP);
 		}
 
+		private static void ForceDisconnect(Client c, string error) {
+			IPEndPoint remoteEP = new IPEndPoint(c.ipAddress, c.port);
+			ForceDisconnect(remoteEP, error);
+		}
+
 		private static void TIM_CheckOffline_Elapsed(object sender, ElapsedEventArgs e) {
 			DateTime now = DateTime.Now;
 
 			foreach (Client c in clients.ToList()) {
 				if (c.lastReceived < now - TimeSpan.FromSeconds(30)) {
 					Logging.Info(c.ToString() + " stopped updating, disconnecting.");
-
-					IPEndPoint remoteEP = new IPEndPoint(c.ipAddress, c.port);
-					ForceDisconnect(remoteEP, "CheckOffline");
-
+					ForceDisconnect(c, "CheckOffline");
 					clients.Remove(c);
 				}
 			}
