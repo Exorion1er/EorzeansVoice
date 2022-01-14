@@ -13,10 +13,9 @@ namespace EorzeansVoiceServer {
 	public class Program {
 		private static readonly UdpClient udpClient = new UdpClient(NetworkConsts.port);
 		private static readonly List<Client> clients = new List<Client>();
-		private static readonly bool verboseLogging = true;
 		private static readonly Timer TIM_CheckOffline = new Timer();
 
-		public static void Main() { // Check args for verbose logging
+		public static void Main() {
 			TIM_CheckOffline.Interval = 1000;
 			TIM_CheckOffline.Elapsed += TIM_CheckOffline_Elapsed;
 			TIM_CheckOffline.Enabled = true;
@@ -152,13 +151,11 @@ namespace EorzeansVoiceServer {
 
 			List<ClientInfo> infoOfAround = ClientInfo.FromClients(client.GetAround(clients));
 
-			if (verboseLogging) {
-				string verboseSuffix = ", not replying because there is no one around them.";
-				if (infoOfAround.Count > 0) {
-					verboseSuffix = ", replying with info of " + infoOfAround.Count + " users around them.";
-				}
-				Logging.Debug("Received update from " + client.ToString() + verboseSuffix);
+			string verboseSuffix = ", not replying because there is no one around them.";
+			if (infoOfAround.Count > 0) {
+				verboseSuffix = ", replying with info of " + infoOfAround.Count + " users around them.";
 			}
+			Logging.Debug("Received update from " + client.ToString() + verboseSuffix);
 
 			if (infoOfAround.Count > 0) {
 				return new NetworkMessage(NetworkMessageType.UpdateClient, infoOfAround);
@@ -209,7 +206,7 @@ namespace EorzeansVoiceServer {
 
 			Logging.Debug("Received Keep Alive from " + client.ToString());
 			client.lastReceived = DateTime.Now;
-			
+
 			// TODO : Send update
 		}
 
