@@ -86,7 +86,7 @@ namespace EorzeansVoiceServer {
 
 			Client newClient = new Client {
 				id = GetNewID(),
-				ipAddress = remoteEP.Address.ToString(),
+				ipAddress = remoteEP.Address,
 				port = remoteEP.Port,
 				worldID = connect.worldID,
 				name = connect.name,
@@ -198,7 +198,7 @@ namespace EorzeansVoiceServer {
 				if (c.lastReceived < now - TimeSpan.FromSeconds(30)) {
 					Logging.Info(c.ToString() + " stopped updating, disconnecting.");
 
-					IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(c.ipAddress), c.port);
+					IPEndPoint remoteEP = new IPEndPoint(c.ipAddress, c.port);
 					ForceDisconnect(remoteEP, "CheckOffline");
 
 					clients.Remove(c);

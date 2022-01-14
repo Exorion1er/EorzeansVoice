@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace EorzeansVoiceLib {
 	public class Client {
 		public int id;
-		public string ipAddress;
+		public IPAddress ipAddress;
 		public int port;
 		public short worldID;
 		public string name;

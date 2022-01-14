@@ -38,7 +38,7 @@ namespace EorzeansVoiceServer {
 		}
 
 		public static void SendMessage(NetworkMessage message, Client client) {
-			IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(client.ipAddress), client.port);
+			IPEndPoint remoteEP = new IPEndPoint(client.ipAddress, client.port);
 			SendMessage(message, remoteEP);
 		}
 	}
