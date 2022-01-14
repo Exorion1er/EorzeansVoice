@@ -6,27 +6,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Sockets;
 using System.Timers;
 
 namespace EorzeansVoiceServer {
 	public class Program {
-		private static readonly UdpClient udpClient = new UdpClient(NetworkConsts.port);
 		private static readonly List<Client> clients = new List<Client>();
 		private static readonly Timer TIM_CheckOffline = new Timer();
 
 		public static void Main() {
+			Logging.console = Logging.LogType.Debug; // Replace with arg
+			Logging.file = Logging.LogType.Info; // Replace with arg
+			Logging.fileName = "Log"; // Replace with arg
+			Logging.Info("##### Eorzean's Voice " + NetworkConsts.serverVersion + " #####\n");
+
 			TIM_CheckOffline.Interval = 1000;
 			TIM_CheckOffline.Elapsed += TIM_CheckOffline_Elapsed;
 			TIM_CheckOffline.Enabled = true;
 
-			Logging.console = Logging.LogType.Debug; // Replace with arg
-			Logging.file = Logging.LogType.Info; // Replace with arg
-			Logging.fileName = "Log"; // Replace with arg
-
-			udpClient.BeginReceive(new AsyncCallback(ReceiveData), null);
-
-			Logging.Info("##### Eorzean's Voice " + NetworkConsts.serverVersion + " #####\n");
+			Network.Start();
 			Logging.Info("Listening...");
 
 			while (true) {
@@ -35,43 +32,19 @@ namespace EorzeansVoiceServer {
 			}
 		}
 
-		private static void ReceiveData(IAsyncResult result) {
-			IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, NetworkConsts.port);
-			NetworkMessage msg = null;
-
-			try {
-				byte[] received = udpClient.EndReceive(result, ref remoteEP);
-				msg = received.ToMessage();
-			} catch (Exception e) {
-				Logging.Error("Error receiving message : " + e.Message);
-				Logging.Error(e.StackTrace);
-				return;
-			} finally {
-				udpClient.BeginReceive(new AsyncCallback(ReceiveData), null);
-			}
-
-			NetworkMessage reply = Process(remoteEP, msg);
-			if (reply != null) {
-				byte[] data = reply.ToBytes();
-				udpClient.SendAsync(data, data.Length, remoteEP);
-			}
-		}
-
-		private static NetworkMessage Process(IPEndPoint remoteEP, NetworkMessage msg) {
-			NetworkMessage reply = null;
-
+		public static void Process(IPEndPoint remoteEP, NetworkMessage msg) {
 			switch (msg.type) {
 				case NetworkMessageType.Ping:
-					reply = Ping(remoteEP);
+					Ping(remoteEP);
 					break;
 				case NetworkMessageType.VersionCheck:
-					reply = VersionCheck(remoteEP, msg);
+					VersionCheck(remoteEP, msg);
 					break;
 				case NetworkMessageType.Connect:
-					reply = Connect(remoteEP, msg);
+					Connect(remoteEP, msg);
 					break;
 				case NetworkMessageType.UpdateServer:
-					reply = UpdateServer(remoteEP, msg);
+					UpdateServer(remoteEP, msg);
 					break;
 				case NetworkMessageType.SendVoiceToServer:
 					ReceiveVoice(remoteEP, msg);
@@ -83,16 +56,14 @@ namespace EorzeansVoiceServer {
 					UserDisconnecting(msg);
 					break;
 			}
-
-			return reply;
 		}
 
-		private static NetworkMessage Ping(IPEndPoint remoteEP) {
+		private static void Ping(IPEndPoint remoteEP) {
 			Logging.Debug("Received ping from " + remoteEP.ToString() + ", answering pong.");
-			return new NetworkMessage(NetworkMessageType.Pong, "Pong");
+			Network.SendMessage(new NetworkMessage(NetworkMessageType.Pong, "Pong"), remoteEP);
 		}
 
-		private static NetworkMessage VersionCheck(IPEndPoint remoteEP, NetworkMessage received) {
+		private static void VersionCheck(IPEndPoint remoteEP, NetworkMessage received) {
 			VersionCheck vCheck = received.content.ToObject<VersionCheck>();
 			NetworkMessage reply = new NetworkMessage(NetworkMessageType.VersionCheckResult, VersionCheckAnswer.UpToDate);
 			string verboseResult = "Up to date.";
@@ -107,10 +78,10 @@ namespace EorzeansVoiceServer {
 			}
 
 			Logging.Debug(remoteEP.ToString() + " is checking version. " + verboseResult);
-			return reply;
+			Network.SendMessage(reply, remoteEP);
 		}
 
-		private static NetworkMessage Connect(IPEndPoint remoteEP, NetworkMessage received) {
+		private static void Connect(IPEndPoint remoteEP, NetworkMessage received) {
 			Connect connect = received.content.ToObject<Connect>();
 
 			Client newClient = new Client {
@@ -129,18 +100,18 @@ namespace EorzeansVoiceServer {
 			clients.Add(newClient);
 
 			// TODO : Send update to all clients around new user
-
-			return new NetworkMessage(NetworkMessageType.Connected, newClient.id);
+			NetworkMessage reply = new NetworkMessage(NetworkMessageType.Connected, newClient.id);
+			Network.SendMessage(reply, remoteEP);
 		}
 
-		private static NetworkMessage UpdateServer(IPEndPoint remoteEP, NetworkMessage received) {
+		private static void UpdateServer(IPEndPoint remoteEP, NetworkMessage received) {
 			UpdateServer newInfo = received.content.ToObject<UpdateServer>();
 			Client client = clients.FirstOrDefault(x => x.id == newInfo.id);
 
 			if (client == null) {
 				Logging.Warn("Received update from non-existant client.");
 				ForceDisconnect(remoteEP, "UpdateServer");
-				return null;
+				return;
 			}
 
 			client.worldID = newInfo.worldID;
@@ -154,13 +125,9 @@ namespace EorzeansVoiceServer {
 			string verboseSuffix = ", not replying because there is no one around them.";
 			if (infoOfAround.Count > 0) {
 				verboseSuffix = ", replying with info of " + infoOfAround.Count + " users around them.";
+				Network.SendMessage(new NetworkMessage(NetworkMessageType.UpdateClient, infoOfAround), client);
 			}
 			Logging.Debug("Received update from " + client.ToString() + verboseSuffix);
-
-			if (infoOfAround.Count > 0) {
-				return new NetworkMessage(NetworkMessageType.UpdateClient, infoOfAround);
-			}
-			return null;
 		}
 
 		private static void ReceiveVoice(IPEndPoint remoteEP, NetworkMessage received) {
@@ -181,16 +148,12 @@ namespace EorzeansVoiceServer {
 			};
 
 			NetworkMessage toOtherUsers = new NetworkMessage(NetworkMessageType.SendVoiceToClient, voice);
-			byte[] toSend = toOtherUsers.ToBytes();
-
 			foreach (Client c in clients) {
 				if (c.id == msg.id) {
 					continue;
 				}
 
-				// TODO : Check if remoteEP is valid, otherwise it prints error
-				IPEndPoint remoteEPcurrent = new IPEndPoint(IPAddress.Parse(c.ipAddress), c.port);
-				udpClient.SendAsync(toSend, toSend.Length, remoteEPcurrent);
+				Network.SendMessage(toOtherUsers, c);
 			}
 		}
 
@@ -224,8 +187,8 @@ namespace EorzeansVoiceServer {
 		}
 
 		private static void ForceDisconnect(IPEndPoint remoteEP, string error) {
-			byte[] data = new NetworkMessage(NetworkMessageType.ForceDisconnect, error).ToBytes();
-			udpClient.SendAsync(data, data.Length, remoteEP);
+			NetworkMessage msg = new NetworkMessage(NetworkMessageType.ForceDisconnect, error);
+			Network.SendMessage(msg, remoteEP);
 		}
 
 		private static void TIM_CheckOffline_Elapsed(object sender, ElapsedEventArgs e) {
