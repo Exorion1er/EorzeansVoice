@@ -21,10 +21,14 @@ namespace EorzeansVoiceServer {
 			TIM_CheckOffline.Elapsed += TIM_CheckOffline_Elapsed;
 			TIM_CheckOffline.Enabled = true;
 
+			Logging.console = Logging.LogType.Debug; // Replace with arg
+			Logging.file = Logging.LogType.Info; // Replace with arg
+			Logging.fileName = "Log"; // Replace with arg
+
 			udpClient.BeginReceive(new AsyncCallback(ReceiveData), null);
 
-			Console.WriteLine(Prefix() + "##### Eorzean's Voice " + NetworkConsts.serverVersion + " #####\n");
-			Console.WriteLine(Prefix() + "Listening...");
+			Logging.Info("##### Eorzean's Voice " + NetworkConsts.serverVersion + " #####\n");
+			Logging.Info("Listening...");
 
 			while (true) {
 				// Handle line commands
@@ -40,8 +44,8 @@ namespace EorzeansVoiceServer {
 				byte[] received = udpClient.EndReceive(result, ref remoteEP);
 				msg = received.ToMessage();
 			} catch (Exception e) {
-				Console.WriteLine(Prefix() + "Error receiving message : " + e.Message);
-				Console.WriteLine(Prefix() + e.StackTrace);
+				Logging.Error("Error receiving message : " + e.Message);
+				Logging.Error(e.StackTrace);
 				return;
 			} finally {
 				udpClient.BeginReceive(new AsyncCallback(ReceiveData), null);
@@ -52,10 +56,6 @@ namespace EorzeansVoiceServer {
 				byte[] data = reply.ToBytes();
 				udpClient.SendAsync(data, data.Length, remoteEP);
 			}
-		}
-
-		private static string Prefix() {
-			return "[" + DateTime.Now.ToString("T") + "] ";
 		}
 
 		private static NetworkMessage Process(IPEndPoint remoteEP, NetworkMessage msg) {
@@ -89,10 +89,7 @@ namespace EorzeansVoiceServer {
 		}
 
 		private static NetworkMessage Ping(IPEndPoint remoteEP) {
-			if (verboseLogging) {
-				Console.WriteLine(Prefix() + "Received ping from " + remoteEP.ToString() + ", answering pong.");
-			}
-
+			Logging.Debug("Received ping from " + remoteEP.ToString() + ", answering pong.");
 			return new NetworkMessage(NetworkMessageType.Pong, "Pong");
 		}
 
@@ -107,13 +104,10 @@ namespace EorzeansVoiceServer {
 				reply.content = VersionCheckAnswer.ServerOutOfDate;
 				verboseResult = "This server is outdated !";
 
-				Console.WriteLine(Prefix() + "##### Please update this server ! New version : " + vCheck.serverVersion.ToString() + " #####");
+				Logging.Warn("##### Please update this server ! New version : " + vCheck.serverVersion.ToString() + " #####");
 			}
 
-			if (verboseLogging) {
-				Console.WriteLine(Prefix() + remoteEP.ToString() + " is checking version. " + verboseResult);
-			}
-
+			Logging.Debug(remoteEP.ToString() + " is checking version. " + verboseResult);
 			return reply;
 		}
 
@@ -132,11 +126,10 @@ namespace EorzeansVoiceServer {
 				lastReceived = DateTime.Now
 			};
 
-			if (verboseLogging) {
-				Console.WriteLine(Prefix() + newClient.ToStringDetailed() + " is now connected.");
-			}
-
+			Logging.Info(newClient.ToStringDetailed() + " is now connected.");
 			clients.Add(newClient);
+
+			// TODO : Send update to all clients around new user
 
 			return new NetworkMessage(NetworkMessageType.Connected, newClient.id);
 		}
@@ -146,7 +139,7 @@ namespace EorzeansVoiceServer {
 			Client client = clients.FirstOrDefault(x => x.id == newInfo.id);
 
 			if (client == null) {
-				Console.WriteLine(Prefix() + "Received update from non-existant client.");
+				Logging.Warn("Received update from non-existant client.");
 				ForceDisconnect(remoteEP, "UpdateServer");
 				return null;
 			}
@@ -164,7 +157,7 @@ namespace EorzeansVoiceServer {
 				if (infoOfAround.Count > 0) {
 					verboseSuffix = ", replying with info of " + infoOfAround.Count + " users around them.";
 				}
-				Console.WriteLine(Prefix() + "Received update from " + client.ToString() + verboseSuffix);
+				Logging.Debug("Received update from " + client.ToString() + verboseSuffix);
 			}
 
 			if (infoOfAround.Count > 0) {
@@ -178,7 +171,7 @@ namespace EorzeansVoiceServer {
 			Client client = clients.FirstOrDefault(x => x.id == msg.id);
 
 			if (client == null) {
-				Console.WriteLine(Prefix() + "Received voice from non-existant client.");
+				Logging.Warn("Received voice from non-existant client.");
 				ForceDisconnect(remoteEP, "ReceiveVoice");
 				return;
 			}
@@ -209,16 +202,15 @@ namespace EorzeansVoiceServer {
 			Client client = clients.FirstOrDefault(x => x.id == userID);
 
 			if (client == null) {
-				Console.WriteLine(Prefix() + "Received Keep Alive from non-existant client.");
+				Logging.Warn("Received Keep Alive from non-existant client.");
 				ForceDisconnect(remoteEP, "KeepAlive");
 				return;
 			}
 
-			if (verboseLogging) {
-				Console.WriteLine(Prefix() + "Received Keep Alive from " + client.ToString());
-			}
-
+			Logging.Debug("Received Keep Alive from " + client.ToString());
 			client.lastReceived = DateTime.Now;
+			
+			// TODO : Send update
 		}
 
 		private static void UserDisconnecting(NetworkMessage received) {
@@ -226,14 +218,11 @@ namespace EorzeansVoiceServer {
 			Client client = clients.FirstOrDefault(x => x.id == userID);
 
 			if (client == null) {
-				Console.WriteLine(Prefix() + "Received Disconnect from non-existant client.");
+				Logging.Warn("Received Disconnect from non-existant client.");
 				return;
 			}
 
-			if (verboseLogging) {
-				Console.WriteLine(Prefix() + client.ToString() + " disconnecting.");
-			}
-
+			Logging.Info(client.ToString() + " disconnecting.");
 			clients.Remove(client);
 		}
 
@@ -247,7 +236,7 @@ namespace EorzeansVoiceServer {
 
 			foreach (Client c in clients.ToList()) {
 				if (c.lastReceived < now - TimeSpan.FromSeconds(30)) {
-					Console.WriteLine(Prefix() + c.ToString() + " stopped updating, disconnecting.");
+					Logging.Info(c.ToString() + " stopped updating, disconnecting.");
 
 					IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(c.ipAddress), c.port);
 					ForceDisconnect(remoteEP, "CheckOffline");
