@@ -96,12 +96,14 @@ namespace EorzeansVoiceServer {
 				lastReceived = DateTime.Now
 			};
 
-			Logging.Info(newClient.ToStringDetailed() + " is now connected.");
 			clients.Add(newClient);
 
-			// TODO : Send update to all clients around new user
 			NetworkMessage reply = new NetworkMessage(NetworkMessageType.Connected, newClient.id);
 			Network.SendMessage(reply, remoteEP);
+			Logging.Info(newClient.ToStringDetailed() + " is now connected.");
+
+			Logging.Debug("Sending update to clients around " + newClient);
+			SendUpdateInfo(newClient.GetAround(clients));
 		}
 
 		private static void UpdateServer(IPEndPoint remoteEP, NetworkMessage received) {
@@ -120,14 +122,25 @@ namespace EorzeansVoiceServer {
 			client.position = newInfo.position;
 			client.lastReceived = DateTime.Now;
 
-			List<ClientInfo> infoOfAround = ClientInfo.FromClients(client.GetAround(clients));
+			SendUpdateInfo(client, false);
+			Logging.Debug("Received update from " + client.ToString());
 
-			string verboseSuffix = ", not replying because there is no one around them.";
-			if (infoOfAround.Count > 0) {
-				verboseSuffix = ", replying with info of " + infoOfAround.Count + " users around them.";
-				Network.SendMessage(new NetworkMessage(NetworkMessageType.UpdateClient, infoOfAround), client);
+			SendUpdateInfo(client.GetAround(clients), false);
+			Logging.Debug("Sending update to clients around " + client.ToString());
+		}
+
+		private static void SendUpdateInfo(Client c, bool sendEvenIfAlone = true) {
+			List<ClientInfo> infoOfAround = ClientInfo.FromClients(c.GetAround(clients));
+			if (sendEvenIfAlone || infoOfAround.Count > 0) {
+				Network.SendMessage(new NetworkMessage(NetworkMessageType.UpdateClient, infoOfAround), c);
+				Logging.Debug("Sending update to " + c.ToString());
 			}
-			Logging.Debug("Received update from " + client.ToString() + verboseSuffix);
+		}
+
+		private static void SendUpdateInfo(List<Client> c, bool sendEvenIfAlone = true) {
+			foreach (Client client in c) {
+				SendUpdateInfo(client, sendEvenIfAlone);
+			}
 		}
 
 		private static void ReceiveVoice(IPEndPoint remoteEP, NetworkMessage received) {
@@ -169,8 +182,6 @@ namespace EorzeansVoiceServer {
 
 			Logging.Debug("Received Keep Alive from " + client.ToString());
 			client.lastReceived = DateTime.Now;
-
-			// TODO : Send update
 		}
 
 		private static void UserDisconnecting(NetworkMessage received) {
@@ -185,15 +196,8 @@ namespace EorzeansVoiceServer {
 			Logging.Info(client.ToString() + " disconnecting.");
 			clients.Remove(client);
 
-			List<Client> around = client.GetAround(clients);
-
-			foreach (Client c in around) {
-				List<ClientInfo> infoOfAround = ClientInfo.FromClients(c.GetAround(clients));
-				NetworkMessage msg = new NetworkMessage(NetworkMessageType.UpdateClient, infoOfAround);
-				Network.SendMessage(msg, c);
-
-				Logging.Debug("Sending update to " + c.ToString() + " because " + client.ToString() + " disconnected.");
-			}
+			Logging.Debug("Sending update to clients around " + client.GetAround(clients));
+			SendUpdateInfo(client.GetAround(clients));
 		}
 
 		private static void ForceDisconnect(IPEndPoint remoteEP, string error) {
