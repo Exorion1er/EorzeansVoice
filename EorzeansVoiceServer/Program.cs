@@ -100,10 +100,9 @@ namespace EorzeansVoiceServer {
 
 			NetworkMessage reply = new NetworkMessage(NetworkMessageType.Connected, newClient.id);
 			Network.SendMessage(reply, remoteEP);
-			Logging.Info(newClient.ToStringDetailed() + " is now connected.");
-
-			Logging.Debug("Sending update to clients around " + newClient);
 			SendUpdateInfo(newClient.GetAround(clients));
+
+			Logging.Info(newClient.ToStringDetailed() + " is now connected.");
 		}
 
 		private static void UpdateServer(IPEndPoint remoteEP, NetworkMessage received) {
@@ -116,30 +115,54 @@ namespace EorzeansVoiceServer {
 				return;
 			}
 
-			client.worldID = newInfo.worldID;
-			client.mapID = newInfo.mapID;
-			client.instanceID = newInfo.instanceID;
-			client.position = newInfo.position;
-			client.lastReceived = DateTime.Now;
+			List<Client> aroundBefore = client.GetAround(clients); // Store around if client teleported
+			bool teleported = UpdateInfo(client, newInfo); // Update info and check if client teleported
 
-			SendUpdateInfo(client, false);
-			Logging.Debug("Received update from " + client.ToString());
+			SendUpdateInfo(client); // Send around info to client
+			SendUpdateInfo(client.GetAround(clients)); // Send around info to around clients
 
-			SendUpdateInfo(client.GetAround(clients), false);
-			Logging.Debug("Sending update to clients around " + client.ToString());
-		}
-
-		private static void SendUpdateInfo(Client c, bool sendEvenIfAlone = true) {
-			List<ClientInfo> infoOfAround = ClientInfo.FromClients(c.GetAround(clients));
-			if (sendEvenIfAlone || infoOfAround.Count > 0) {
-				Network.SendMessage(new NetworkMessage(NetworkMessageType.UpdateClient, infoOfAround), c);
-				Logging.Debug("Sending update to " + c.ToString());
+			if (teleported) {
+				SendUpdateInfo(aroundBefore); // If teleported, send around info to around clients before teleporting
 			}
+
+			// Optimization : Instead of sending everyone information about everyone, only send information about what changed
+
+			Logging.Debug("Received update from " + client.ToString());
 		}
 
-		private static void SendUpdateInfo(List<Client> c, bool sendEvenIfAlone = true) {
+		private static bool UpdateInfo(Client c, UpdateServer newInfo) {
+			bool teleported = false;
+
+			if (c.worldID != newInfo.worldID) {
+				teleported = true;
+				c.worldID = newInfo.worldID;
+			}
+
+			if (c.mapID != newInfo.mapID) {
+				teleported = true;
+				c.mapID = newInfo.mapID;
+			}
+
+			if (c.instanceID != newInfo.instanceID) {
+				teleported = true;
+				c.instanceID = newInfo.instanceID;
+			}
+
+			c.position = newInfo.position;
+			c.lastReceived = DateTime.Now;
+
+			return teleported;
+		}
+
+		private static void SendUpdateInfo(Client c) {
+			List<ClientInfo> infoOfAround = ClientInfo.FromClients(c.GetAround(clients));
+			Logging.Debug("Sending update to " + c.ToString());
+			Network.SendMessage(new NetworkMessage(NetworkMessageType.UpdateClient, infoOfAround), c);
+		}
+
+		private static void SendUpdateInfo(List<Client> c) {
 			foreach (Client client in c) {
-				SendUpdateInfo(client, sendEvenIfAlone);
+				SendUpdateInfo(client);
 			}
 		}
 
@@ -208,6 +231,10 @@ namespace EorzeansVoiceServer {
 		private static void ForceDisconnect(Client c, string error) {
 			IPEndPoint remoteEP = new IPEndPoint(c.ipAddress, c.port);
 			ForceDisconnect(remoteEP, error);
+
+			Logging.Debug("Sending update to clients " + c.GetAround(clients));
+			clients.Remove(c);
+			SendUpdateInfo(c.GetAround(clients));
 		}
 
 		private static void TIM_CheckOffline_Elapsed(object sender, ElapsedEventArgs e) {
