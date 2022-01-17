@@ -2,6 +2,7 @@
 using POpusCodec;
 using POpusCodec.Enums;
 using System;
+using System.Timers;
 
 namespace EorzeansVoice {
 	public static class AudioInputProcessing {
@@ -14,6 +15,7 @@ namespace EorzeansVoice {
 		public static float voiceActivationThreshold;
 		public static bool muted = false;
 
+		private static readonly Timer TIM_KeepOn = new Timer();
 		private static OpusEncoder encoder;
 
 		public static void Init(float threshold) {
@@ -22,6 +24,9 @@ namespace EorzeansVoice {
 			encoder = new OpusEncoder(SamplingRate.Sampling48000, Channels.Stereo, OpusApplicationType.Voip, Delay.Delay20ms) {
 				Bitrate = 64 * 1024
 			};
+
+			TIM_KeepOn.Interval = 300;
+			TIM_KeepOn.Elapsed += TIM_KeepOn_Elapsed;
 		}
 
 		public static void ProcessAudioInput(byte[] data) {
@@ -30,6 +35,7 @@ namespace EorzeansVoice {
 					VoiceActivation(data);
 					break;
 				case Mode.PushToTalk:
+					// TODO
 					break;
 			}
 		}
@@ -38,9 +44,23 @@ namespace EorzeansVoice {
 			float volume = ((float)MeasureDB(data)).Normalize(-100, 0, 0, 1);
 			Main.instance.UpdateVoiceActivationSlider(volume);
 
-			if (!muted && volume >= voiceActivationThreshold) {
-				EncodeSend(data);
+			if (muted) {
+				return;
 			}
+
+			bool aboveThreshold = volume >= voiceActivationThreshold;
+			if (TIM_KeepOn.Enabled || aboveThreshold) {
+				EncodeSend(data);
+
+				if (aboveThreshold) {
+					TIM_KeepOn.Stop();
+					TIM_KeepOn.Start();
+				}
+			}
+		}
+
+		private static void TIM_KeepOn_Elapsed(object sender, ElapsedEventArgs e) {
+			TIM_KeepOn.Stop();
 		}
 
 		private static double MeasureDB(byte[] data) {
