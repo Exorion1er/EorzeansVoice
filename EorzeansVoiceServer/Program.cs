@@ -184,6 +184,16 @@ namespace EorzeansVoiceServer {
 
 			Logging.Info(client.ToString() + " disconnecting.");
 			clients.Remove(client);
+
+			List<Client> around = client.GetAround(clients);
+
+			foreach (Client c in around) {
+				List<ClientInfo> infoOfAround = ClientInfo.FromClients(c.GetAround(clients));
+				NetworkMessage msg = new NetworkMessage(NetworkMessageType.UpdateClient, infoOfAround);
+				Network.SendMessage(msg, c);
+
+				Logging.Debug("Sending update to " + c.ToString() + " because " + client.ToString() + " disconnected.");
+			}
 		}
 
 		private static void ForceDisconnect(IPEndPoint remoteEP, string error) {

@@ -17,6 +17,7 @@ namespace EorzeansVoice {
 			public BufferedWaveProvider waveProvider;
 			public WaveChannel32 channel;
 			public USC_ClientAround controls;
+			public bool remove;
 		}
 
 		public static Main instance;
@@ -199,11 +200,26 @@ namespace EorzeansVoice {
 					c.position = i.position;
 				}
 			}
+
+			foreach (ClientAround c in around) {
+				ClientInfo i = info.FirstOrDefault(x => x.id == c.id);
+
+				if (i == null) {
+					c.remove = true;
+				}
+			}
 		}
 
 		private void UpdateControls(object sender, EventArgs e) {
-			foreach (ClientAround c in around) {
-				if (c.controls == null) {
+			foreach (ClientAround c in around.ToArray()) {
+				if (c.remove) {
+					if (c.controls != null) {
+						PAN_AroundContent.Controls.Remove(c.controls);
+					}
+
+					around.Remove(c);
+					c.controls.Dispose();
+				} else if (c.controls == null) {
 					USC_ClientAround newClientControls = new USC_ClientAround {
 						Dock = DockStyle.Top,
 						Userame = c.name
