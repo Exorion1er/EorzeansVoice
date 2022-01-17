@@ -1,11 +1,15 @@
-![Eorzean's Voice Logo](https://github.com/ExoKalork/EorzeansVoice/blob/master/EorzeansVoice/Resources/Logo.ico)
-# Eorzean's Voice
+![Eorzeans' Voice Logo](https://github.com/ExoKalork/EorzeansVoice/blob/master/EorzeansVoice/Resources/Logo.ico)
+# Eorzeans' Voice
 This software is a proximity voice chat with people around you.\
 Once setup correctly, and with people around you also using the software, you should be able to just speak !\
 This software has spatial audio, meaning you'll be able to tell both distance, and direction (stereo panning).\
 \
 DISCLAIMER: Use of this program is at your own risk. Square Enix does not permit the use of any third party tools, even those which do not modify the game.\
 As a general rule, avoid talking about this software ingame, as it is a bannable offense.
+
+# Status
+As of writing this (17/01), Eorzeans' Voice is still in early development. Some core features are still missing, but most of the ground work is done.\
+I will post updates on the progress on the projet's Discord server : https://discord.gg/pYuckwuava
 
 # Installation & Usage
 ### Video (Coming soon !)
