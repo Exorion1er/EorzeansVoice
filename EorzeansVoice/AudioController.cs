@@ -27,7 +27,7 @@ namespace EorzeansVoice {
 		private static readonly MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
 		private static WaveInEvent input;
 		private static MixingWaveProvider32 mixer;
-		private static WaveOut output;
+		private static WaveOutEvent output;
 		private static OpusDecoder decoder;
 
 		public static void LoadAudioDevices(ComboBox inputs, ComboBox outputs) {
@@ -77,7 +77,7 @@ namespace EorzeansVoice {
 			input.RecordingStopped += RecordingStopped;
 			input.DataAvailable += DataAvailable;
 
-			output = new WaveOut {
+			output = new WaveOutEvent {
 				DeviceNumber = outputDevice.id,
 				DesiredLatency = 100
 			};
@@ -88,6 +88,10 @@ namespace EorzeansVoice {
 		}
 
 		private static void OutputPlay() {
+			if (output.PlaybackState != PlaybackState.Stopped) {
+				output.Stop();
+			}
+
 			if (mixer.InputCount == 0) {
 				// Hacky way of setting the WaveOut sampling rate to 48000 before adding any channel to the mixer
 				BufferedWaveProvider p = new BufferedWaveProvider(input.WaveFormat);
@@ -130,9 +134,6 @@ namespace EorzeansVoice {
 			WaveChannel32 channel = new WaveChannel32(stream);
 
 			mixer.AddInputStream(channel);
-
-			output.Stop();
-			output.Play();
 
 			return new Tuple<BufferedWaveProvider, WaveChannel32>(waveProvider, channel);
 		}
