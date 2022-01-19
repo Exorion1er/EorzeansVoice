@@ -6,7 +6,12 @@ using System.Net.Sockets;
 
 namespace EorzeansVoiceServer {
 	public static class Network {
-		private static readonly UdpClient udpClient = new UdpClient(NetworkConsts.port);
+		private static readonly UdpClient udpClient;
+
+		static Network() {
+			udpClient = new UdpClient(NetworkConsts.port);
+			udpClient.Client.IOControl((IOControlCode)(-1744830452), new byte[] { 0, 0, 0, 0 }, null);
+		}
 
 		public static void Start() {
 			udpClient.BeginReceive(new AsyncCallback(ReceiveData), null);
