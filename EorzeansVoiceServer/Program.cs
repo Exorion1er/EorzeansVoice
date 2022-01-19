@@ -156,7 +156,6 @@ namespace EorzeansVoiceServer {
 
 		private static void SendUpdateInfo(Client c) {
 			List<ClientInfo> infoOfAround = ClientInfo.FromClients(c.GetAround(clients));
-			Logging.Debug("Sending update to " + c.ToString());
 			Network.SendMessage(new NetworkMessage(NetworkMessageType.UpdateClient, infoOfAround), c);
 		}
 
@@ -216,11 +215,10 @@ namespace EorzeansVoiceServer {
 				return;
 			}
 
-			Logging.Info(client.ToString() + " disconnecting.");
 			clients.Remove(client);
-
-			Logging.Debug("Sending update to clients around " + client.GetAround(clients));
 			SendUpdateInfo(client.GetAround(clients));
+
+			Logging.Info(client.ToString() + " disconnecting.");
 		}
 
 		private static void ForceDisconnect(IPEndPoint remoteEP, string error) {
@@ -232,7 +230,6 @@ namespace EorzeansVoiceServer {
 			IPEndPoint remoteEP = new IPEndPoint(c.ipAddress, c.port);
 			ForceDisconnect(remoteEP, error);
 
-			Logging.Debug("Sending update to clients " + c.GetAround(clients));
 			clients.Remove(c);
 			SendUpdateInfo(c.GetAround(clients));
 		}
