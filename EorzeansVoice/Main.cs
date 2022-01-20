@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Principal;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace EorzeansVoice {
@@ -36,6 +38,15 @@ namespace EorzeansVoice {
 
 		private void Main_Load(object sender, EventArgs e) {
 			instance = this;
+
+			AppDomain domain = Thread.GetDomain();
+			domain.SetPrincipalPolicy(PrincipalPolicy.WindowsPrincipal);
+			WindowsPrincipal p = (WindowsPrincipal)Thread.CurrentPrincipal;
+			if (!p.IsInRole(WindowsBuiltInRole.Administrator)) {
+				MessageBox.Show("You need to run this app as an administrator for full functionality.");
+				Application.Exit();
+				return;
+			}
 
 			if (!Network.IsNetworkWorking()) {
 				MessageBox.Show("Couldn't establish a connection with the internet. Please check your internet connection.");
