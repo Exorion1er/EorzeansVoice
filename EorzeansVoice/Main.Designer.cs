@@ -291,6 +291,10 @@ namespace EorzeansVoice {
 			this.CBB_AudioInputs.TabIndex = 0;
 			this.CBB_AudioInputs.SelectedIndexChanged += new System.EventHandler(this.CBB_AudioInputs_SelectedIndexChanged);
 			// 
+			// TIM_LoginWait
+			// 
+			this.TIM_LoginWait.Tick += new System.EventHandler(this.LoginWaitTick);
+			// 
 			// TIM_SendInfo
 			// 
 			this.TIM_SendInfo.Interval = 200;
