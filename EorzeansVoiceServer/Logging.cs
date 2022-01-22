@@ -1,48 +1,81 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace EorzeansVoiceServer {
 	public static class Logging {
+		private struct Logger {
+			public Logger (LogType type, LogLevel level, string fileName) {
+				this.type = type;
+				this.level = level;
+				this.fileName = fileName;
+			}
+
+			public LogType type;
+			public LogLevel level;
+			public string fileName;
+		}
+
 		public enum LogType : int {
+			Console = 0,
+			File = 1
+		}
+
+		public enum LogLevel : int {
 			Debug = 0,
 			Info = 1,
 			Warn = 2,
 			Error = 3
 		}
 
-		public static LogType console;
-		public static LogType file;
-		public static string fileName;
+		private static readonly List<Logger> loggers = new List<Logger>();
 
-		private static void Log(LogType type, string message) {
-			if ((int)console <= (int)type) {
-				Console.WriteLine(Prefix(type) + message);
-			}
+		public static void AddLogger(LogType type, LogLevel level, string fileName = "Log") {
+			loggers.Add(new Logger(type, level, fileName));
+		}
 
-			if ((int)file <= (int)type) {
-				string fname = fileName + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
-				File.AppendAllLinesAsync(fname, new string[] { Prefix(type) + message });
+		private static void Log(LogLevel level, string message) {
+			foreach (Logger logger in loggers) {
+				if ((int)logger.level <= (int)level) {
+					switch (logger.type) {
+						case LogType.Console:
+							LogConsole(level, message);
+							break;
+						case LogType.File:
+							LogFile(level, message, logger.fileName);
+							break;
+					}
+				}
 			}
 		}
 
-		private static string Prefix(LogType type) {
+		private static void LogConsole(LogLevel level, string message) {
+			Console.WriteLine(Prefix(level) + message);
+		}
+
+		private static void LogFile(LogLevel level, string message, string fileName) {
+			string finalName = fileName + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
+			File.AppendAllLinesAsync(finalName, new string[] { Prefix(level) + message });
+		}
+
+		private static string Prefix(LogLevel type) {
 			return "[" + DateTime.Now.ToString("HH:mm:ss.fff") + "][" + type.ToString() + "] ";
 		}
 
 		public static void Debug(string message) {
-			Log(LogType.Debug, message);
+			Log(LogLevel.Debug, message);
 		}
 
 		public static void Info(string message) {
-			Log(LogType.Info, message);
+			Log(LogLevel.Info, message);
 		}
 
 		public static void Warn(string message) {
-			Log(LogType.Warn, message);
+			Log(LogLevel.Warn, message);
 		}
 
 		public static void Error(string message) {
-			Log(LogType.Error, message);
+			Log(LogLevel.Error, message);
 		}
 	}
 }
