@@ -14,9 +14,9 @@ namespace EorzeansVoiceServer {
 		private static readonly Timer TIM_CheckOffline = new Timer();
 
 		public static void Main() {
-			Logging.console = Logging.LogType.Debug; // Replace with arg
-			Logging.file = Logging.LogType.Info; // Replace with arg
-			Logging.fileName = "Log"; // Replace with arg
+			Logging.AddLogger(Logging.LogType.Console, Logging.LogLevel.Debug); // Replace LogLevel with arg
+			Logging.AddLogger(Logging.LogType.File, Logging.LogLevel.Info, "Log"); // Replace LogLevel and FileName with arg
+
 			Logging.Info("##### Eorzean's Voice " + NetworkConsts.serverVersion + " #####\n");
 
 			TIM_CheckOffline.Interval = 1000;
