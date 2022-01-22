@@ -284,8 +284,10 @@ namespace EorzeansVoice {
 		}
 
 		private void Main_FormClosing(object sender, FormClosingEventArgs e) {
-			Logging.Info("Disconnect before closing.");
-			Network.Disconnect(userID); // TODO : Check if connected before sending disconnect.
+			if (userID != 0) {
+				Logging.Info("Disconnect before closing.");
+				Network.Disconnect(userID);
+			}
 		}
 
 		private void VoiceModeChanged(object sender, EventArgs e) {
