@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace EorzeansVoiceServer {
+namespace EorzeansVoiceLib {
 	public static class Logging {
 		private struct Logger {
 			public Logger (LogType type, LogLevel level, string fileName) {
