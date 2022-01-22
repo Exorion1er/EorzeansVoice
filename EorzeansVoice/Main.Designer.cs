@@ -110,7 +110,7 @@ namespace EorzeansVoice {
 			// 
 			// TIM_Process
 			// 
-			this.TIM_Process.Tick += new System.EventHandler(this.ProcessTimerTick);
+			this.TIM_Process.Tick += new System.EventHandler(this.TIM_Process_Tick);
 			// 
 			// GPB_Audio
 			// 

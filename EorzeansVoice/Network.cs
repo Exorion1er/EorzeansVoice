@@ -21,7 +21,9 @@ namespace EorzeansVoice {
 
 				using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 				return response.StatusCode == HttpStatusCode.OK;
-			} catch {
+			} catch (Exception e) {
+				Logging.Error("An error occurred in Network.IsNetworkWorking : " + e.Message);
+				Logging.Error(e.StackTrace);
 				return false;
 			}
 		}
@@ -40,7 +42,9 @@ namespace EorzeansVoice {
 				udpClient.Connect(ep);
 
 				return true;
-			} catch {
+			} catch (Exception e) {
+				Logging.Error("An error occurred in Network.ConnectToServer : " + e.Message);
+				Logging.Error(e.StackTrace);
 				return false;
 			}
 		}
@@ -56,7 +60,8 @@ namespace EorzeansVoice {
 				NetworkMessage msg = received.ToMessage();
 				return (string)msg.content == "Pong";
 			} catch (Exception e) {
-				MessageBox.Show("An error occurred in Network.PingServer : " + e.Message);
+				Logging.Error("An error occurred in Network.PingServer : " + e.Message);
+				Logging.Error(e.StackTrace);
 				return false;
 			}
 		}
@@ -73,7 +78,8 @@ namespace EorzeansVoice {
 				NetworkMessage msg = received.ToMessage();
 				return (VersionCheckAnswer)msg.content;
 			} catch (Exception e) {
-				MessageBox.Show("An error occurred in Network.IsUpToDate : " + e.Message);
+				Logging.Error("An error occurred in Network.IsUpToDate : " + e.Message);
+				Logging.Error(e.StackTrace);
 				return VersionCheckAnswer.ClientOutOfDate; // This makes the app close
 			}
 		}
@@ -97,7 +103,8 @@ namespace EorzeansVoice {
 				NetworkMessage msg = received.ToMessage();
 				return (int)msg.content;
 			} catch (Exception e) {
-				MessageBox.Show("An error occurred in Network.ConnectToVoiceChat : " + e.Message);
+				Logging.Error("An error occurred in Network.ConnectToVoiceChat : " + e.Message);
+				Logging.Error(e.StackTrace);
 				return 0;
 			}
 		}
@@ -139,8 +146,11 @@ namespace EorzeansVoice {
 			try {
 				received = udpClient.EndReceive(result, ref remoteEP);
 			} catch (Exception e) {
-				MessageBox.Show("An error ocurred trying to receive data from the server. Please restart EorzeansVoice.");
-				MessageBox.Show(e.Message + "\n\n" + e.StackTrace);
+				MessageBox.Show("An error occurred while receiving data from the server. Please restart EorzeansVoice.");
+
+				Logging.Error("An error occurred in Network.ReceiveData : " + e.Message);
+				Logging.Error(e.StackTrace);
+
 				Application.Exit();
 				return;
 			}
@@ -167,6 +177,7 @@ namespace EorzeansVoice {
 			}
 
 			MessageBox.Show("An error occurred that made the server disconnect you. Please restart EorzeansVoice. Error : " + error);
+			Logging.Warn("Received ForceDisconnect from server, closing.");
 			Application.Exit();
 		}
 	}
