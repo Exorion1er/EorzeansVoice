@@ -15,9 +15,9 @@ namespace EorzeansVoiceServer {
 
 		public static void Main() {
 			Logging.AddLogger(Logging.LogType.Console, Logging.LogLevel.Debug); // Replace LogLevel with arg
-			Logging.AddLogger(Logging.LogType.File, Logging.LogLevel.Info, "Log"); // Replace LogLevel and FileName with arg
+			Logging.AddLogger(Logging.LogType.File, Logging.LogLevel.Debug, "Log"); // Replace LogLevel and FileName with arg
 
-			Logging.Info("##### Eorzean's Voice " + NetworkConsts.serverVersion + " #####\n");
+			Logging.Info("##### Eorzeans' Voice " + NetworkConsts.serverVersion + " #####\n");
 
 			TIM_CheckOffline.Interval = 1000;
 			TIM_CheckOffline.Elapsed += TIM_CheckOffline_Elapsed;
