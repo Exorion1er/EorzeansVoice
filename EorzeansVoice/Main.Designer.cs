@@ -32,6 +32,7 @@ namespace EorzeansVoice {
 			this.LBL_Process = new System.Windows.Forms.Label();
 			this.TIM_Process = new System.Windows.Forms.Timer(this.components);
 			this.GPB_Audio = new System.Windows.Forms.GroupBox();
+			this.SLD_GlobalVolume = new EorzeansVoice.Utils.Slider();
 			this.SLD_VoiceActivation = new EorzeansVoice.Utils.Slider();
 			this.BT_PTTKeybind = new System.Windows.Forms.Button();
 			this.RBT_PushToTalk = new System.Windows.Forms.RadioButton();
@@ -39,7 +40,6 @@ namespace EorzeansVoice {
 			this.LBL_GlobalVolume = new System.Windows.Forms.Label();
 			this.LBL_GlobalVolumeName = new System.Windows.Forms.Label();
 			this.BT_Mute = new System.Windows.Forms.Button();
-			this.TBR_GlobalVolume = new System.Windows.Forms.TrackBar();
 			this.BT_Deafen = new System.Windows.Forms.Button();
 			this.LBL_AudioOutputs = new System.Windows.Forms.Label();
 			this.LBL_AudioInputs = new System.Windows.Forms.Label();
@@ -53,7 +53,6 @@ namespace EorzeansVoice {
 			this.TIM_UpdateControls = new System.Windows.Forms.Timer(this.components);
 			this.GPB_Process.SuspendLayout();
 			this.GPB_Audio.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.TBR_GlobalVolume)).BeginInit();
 			this.GPB_Around.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -116,6 +115,7 @@ namespace EorzeansVoice {
 			// 
 			this.GPB_Audio.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+			this.GPB_Audio.Controls.Add(this.SLD_GlobalVolume);
 			this.GPB_Audio.Controls.Add(this.SLD_VoiceActivation);
 			this.GPB_Audio.Controls.Add(this.BT_PTTKeybind);
 			this.GPB_Audio.Controls.Add(this.RBT_PushToTalk);
@@ -123,7 +123,6 @@ namespace EorzeansVoice {
 			this.GPB_Audio.Controls.Add(this.LBL_GlobalVolume);
 			this.GPB_Audio.Controls.Add(this.LBL_GlobalVolumeName);
 			this.GPB_Audio.Controls.Add(this.BT_Mute);
-			this.GPB_Audio.Controls.Add(this.TBR_GlobalVolume);
 			this.GPB_Audio.Controls.Add(this.BT_Deafen);
 			this.GPB_Audio.Controls.Add(this.LBL_AudioOutputs);
 			this.GPB_Audio.Controls.Add(this.LBL_AudioInputs);
@@ -136,10 +135,29 @@ namespace EorzeansVoice {
 			this.GPB_Audio.TabStop = false;
 			this.GPB_Audio.Text = "Audio";
 			// 
+			// SLD_GlobalVolume
+			// 
+			this.SLD_GlobalVolume.ActivebarColor = System.Drawing.SystemColors.ActiveCaption;
+			this.SLD_GlobalVolume.ActiveValue = 0.3F;
+			this.SLD_GlobalVolume.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.SLD_GlobalVolume.HandleColor = System.Drawing.SystemColors.Highlight;
+			this.SLD_GlobalVolume.InactiveBarColor = System.Drawing.SystemColors.ControlDark;
+			this.SLD_GlobalVolume.Location = new System.Drawing.Point(107, 91);
+			this.SLD_GlobalVolume.Max = 1F;
+			this.SLD_GlobalVolume.Min = 0F;
+			this.SLD_GlobalVolume.Name = "SLD_GlobalVolume";
+			this.SLD_GlobalVolume.Size = new System.Drawing.Size(208, 23);
+			this.SLD_GlobalVolume.TabIndex = 14;
+			this.SLD_GlobalVolume.Text = "slider1";
+			this.SLD_GlobalVolume.UseActiveValue = false;
+			this.SLD_GlobalVolume.Value = 0.3F;
+			this.SLD_GlobalVolume.ValueChanged += new System.EventHandler(this.SLD_GlobalVolume_ValueChanged);
+			// 
 			// SLD_VoiceActivation
 			// 
 			this.SLD_VoiceActivation.ActivebarColor = System.Drawing.SystemColors.ActiveCaption;
-			this.SLD_VoiceActivation.ActiveValue = 0.3F;
+			this.SLD_VoiceActivation.ActiveValue = 0F;
 			this.SLD_VoiceActivation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.SLD_VoiceActivation.HandleColor = System.Drawing.SystemColors.Highlight;
@@ -225,18 +243,6 @@ namespace EorzeansVoice {
 			this.BT_Mute.TabIndex = 5;
 			this.BT_Mute.UseVisualStyleBackColor = true;
 			this.BT_Mute.Click += new System.EventHandler(this.BT_Mute_Click);
-			// 
-			// TBR_GlobalVolume
-			// 
-			this.TBR_GlobalVolume.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.TBR_GlobalVolume.Location = new System.Drawing.Point(107, 80);
-			this.TBR_GlobalVolume.Maximum = 100;
-			this.TBR_GlobalVolume.Name = "TBR_GlobalVolume";
-			this.TBR_GlobalVolume.Size = new System.Drawing.Size(208, 45);
-			this.TBR_GlobalVolume.TabIndex = 6;
-			this.TBR_GlobalVolume.TickStyle = System.Windows.Forms.TickStyle.Both;
-			this.TBR_GlobalVolume.Value = 100;
 			// 
 			// BT_Deafen
 			// 
@@ -325,7 +331,7 @@ namespace EorzeansVoice {
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.PAN_AroundContent.AutoScroll = true;
 			this.PAN_AroundContent.BackColor = System.Drawing.Color.Transparent;
-			this.PAN_AroundContent.Location = new System.Drawing.Point(0, 22);
+			this.PAN_AroundContent.Location = new System.Drawing.Point(-1, 22);
 			this.PAN_AroundContent.Name = "PAN_AroundContent";
 			this.PAN_AroundContent.Size = new System.Drawing.Size(467, 238);
 			this.PAN_AroundContent.TabIndex = 0;
@@ -356,7 +362,6 @@ namespace EorzeansVoice {
 			this.GPB_Process.ResumeLayout(false);
 			this.GPB_Audio.ResumeLayout(false);
 			this.GPB_Audio.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.TBR_GlobalVolume)).EndInit();
 			this.GPB_Around.ResumeLayout(false);
 			this.ResumeLayout(false);
 
@@ -379,7 +384,6 @@ namespace EorzeansVoice {
 		private System.Windows.Forms.GroupBox GPB_Around;
 		private System.Windows.Forms.Timer TIM_UpdateControls;
 		private System.Windows.Forms.Panel PAN_AroundContent;
-		private System.Windows.Forms.TrackBar TBR_GlobalVolume;
 		private System.Windows.Forms.Button BT_Mute;
 		private System.Windows.Forms.Button BT_Deafen;
 		private System.Windows.Forms.Label LBL_GlobalVolume;
@@ -388,6 +392,7 @@ namespace EorzeansVoice {
 		private System.Windows.Forms.RadioButton RBT_PushToTalk;
 		private System.Windows.Forms.RadioButton RBT_VoiceActivation;
 		private Utils.Slider SLD_VoiceActivation;
+		private Utils.Slider SLD_GlobalVolume;
 	}
 }
 
