@@ -72,8 +72,9 @@ namespace EorzeansVoice {
 				return;
 			}
 
-			Logging.Debug("Loading Audio Devices...");
+			Logging.Debug("Loading Audio...");
 			AudioController.LoadAudioDevices(CBB_AudioInputs, CBB_AudioOutputs);
+			InitAudio();
 
 			Logging.Info("Loading complete !");
 		}
@@ -81,7 +82,7 @@ namespace EorzeansVoice {
 		private void Main_Shown(object sender, EventArgs e) {
 			CheckVersion();
 			if (FindProcess()) {
-				InitAudio();
+				LogInAndConnect();
 			}
 		}
 
@@ -143,7 +144,7 @@ namespace EorzeansVoice {
 			if (processUpdateName) {
 				LBL_Process.Text = ProcessFinder.GetProcessInformation(gameProcess).ToString();
 			} else if (FindProcess()) {
-				InitAudio();
+				LogInAndConnect();
 			}
 		}
 
@@ -151,17 +152,11 @@ namespace EorzeansVoice {
 			FindProcess();
 		}
 
-		private void InitAudio() { // TODO : Do that inside loading
-			Logging.Debug("Initiating audio...");
-			LBL_Status.Text = "Initiating audio";
-
+		private void InitAudio() {
 			AudioController.Device input = (AudioController.Device)CBB_AudioInputs.SelectedItem;
 			AudioController.Device output = (AudioController.Device)CBB_AudioOutputs.SelectedItem;
 			AudioController.Init(input, output);
 			AudioInputProcessing.Init(SLD_VoiceActivation.Value);
-
-			Logging.Debug("Audio initated.");
-			LogInAndConnect();
 		}
 
 		private void LogInAndConnect() {
