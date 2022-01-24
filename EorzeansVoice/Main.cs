@@ -335,5 +335,9 @@ namespace EorzeansVoice {
 				AudioController.ChangeOutputDevice(d);
 			}
 		}
+
+		private void SLD_GlobalVolume_ValueChanged(object sender, EventArgs e) {
+			LBL_GlobalVolume.Text = Math.Round(SLD_GlobalVolume.Value * 100f).ToString() + " %";
+		}
 	}
 }
