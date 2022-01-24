@@ -3,6 +3,8 @@ using POpusCodec;
 using POpusCodec.Enums;
 using System;
 using System.Timers;
+using System.Windows.Forms;
+using Timer = System.Timers.Timer;
 
 namespace EorzeansVoice {
 	public static class AudioInputProcessing {
@@ -13,11 +15,11 @@ namespace EorzeansVoice {
 
 		public static Mode mode;
 		public static float voiceActivationThreshold;
-		public static HotkeyController.KeyAction pushToTalkKey;
 		public static bool muted = false;
 
 		private static readonly Timer TIM_KeepOn = new Timer();
 		private static OpusEncoder encoder;
+		private static HotkeyController.KeyAction pttKey;
 		private static bool pttDown = false;
 
 		public static void Init(float threshold) {
@@ -29,6 +31,31 @@ namespace EorzeansVoice {
 
 			TIM_KeepOn.Interval = 300;
 			TIM_KeepOn.Elapsed += TIM_KeepOn_Elapsed;
+		}
+
+		public static void ChangePTTKey(Keys key, Keys modifiers) {
+			HotkeyController.KeyAction ka = new HotkeyController.KeyAction() {
+				key = key,
+				upDown = HotkeyController.KeyUpDown.KeyDown | HotkeyController.KeyUpDown.KeyUp,
+				control = modifiers.HasFlag(Keys.Control),
+				shift = modifiers.HasFlag(Keys.Shift),
+				alt = modifiers.HasFlag(Keys.Alt),
+				callbackDown = PTTDown,
+				callbackUp = PTTUp
+			};
+			HotkeyController.hookedKeys.Remove(pttKey);
+			HotkeyController.hookedKeys.Add(ka);
+			pttKey = ka;
+		}
+
+		private static void PTTDown() {
+			pttDown = true;
+			TIM_KeepOn.Stop();
+		}
+
+		private static void PTTUp() {
+			pttDown = false;
+			TIM_KeepOn.Start();
 		}
 
 		public static void ProcessAudioInput(byte[] data) {

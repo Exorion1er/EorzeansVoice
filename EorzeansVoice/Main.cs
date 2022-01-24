@@ -6,6 +6,8 @@ namespace EorzeansVoice {
 	public partial class Main : Form {
 		public static Main instance;
 
+		public bool lookingForKeybind;
+
 		public Main() {
 			InitializeComponent();
 		}
@@ -113,7 +115,21 @@ namespace EorzeansVoice {
 		}
 
 		private void BT_PTTKeybind_Click(object sender, EventArgs e) {
-			HotkeyController.ChangeKeybind((int)Keys.O, 0);
+			lookingForKeybind = true;
+			BT_PTTKeybind.Text = "Recording...";
+			HotkeyController.StopListening();
+		}
+
+		private void BT_PTTKeybind_KeyDown(object sender, KeyEventArgs e) {
+			// TODO : Don't stop for modifiers
+
+			if (lookingForKeybind) {
+				lookingForKeybind = false;
+				BT_PTTKeybind.Text = e.Modifiers + " + " + e.KeyData;
+
+				AudioInputProcessing.ChangePTTKey(e.KeyData, e.Modifiers);
+				HotkeyController.StartListening();
+			}
 		}
 	}
 }

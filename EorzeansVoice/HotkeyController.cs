@@ -12,9 +12,11 @@ namespace EorzeansVoice {
 			public bool shift;
 			public bool control;
 			public bool alt;
-			public Action callback;
+			public Action callbackDown;
+			public Action callbackUp;
 		}
 
+		[Flags]
 		public enum KeyUpDown {
 			KeyUp,
 			KeyDown
@@ -86,10 +88,11 @@ namespace EorzeansVoice {
 						foreach (KeyAction ka in hookedKeys) {
 
 							if (ka.key == key && ka.control == controlDown && ka.shift == shiftDown && ka.alt == altDown) {
-								if (ka.upDown == KeyUpDown.KeyDown && (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)) {
-									ka.callback?.Invoke();
-								} else if (ka.upDown == KeyUpDown.KeyUp && (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)) {
-									ka.callback?.Invoke();
+								if (ka.upDown.HasFlag(KeyUpDown.KeyDown) && (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)) {
+									ka.callbackDown?.Invoke();
+								}
+								if (ka.upDown.HasFlag(KeyUpDown.KeyUp) && (wParam == WM_KEYUP || wParam == WM_SYSKEYUP)) {
+									ka.callbackUp?.Invoke();
 								}
 							}
 						}
