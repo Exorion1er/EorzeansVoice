@@ -95,8 +95,16 @@ namespace EorzeansVoice {
 			return false;
 		}
 
-		private static bool PushToTalk() { // TODO
-			return true;
+		private static bool PushToTalk() {
+			if (TIM_KeepOn.Enabled || pttDown) {
+				if (pttDown) {
+					TIM_KeepOn.Stop();
+					TIM_KeepOn.Start();
+				}
+
+				return true;
+			}
+			return false;
 		}
 
 		private static void TIM_KeepOn_Elapsed(object sender, ElapsedEventArgs e) {
