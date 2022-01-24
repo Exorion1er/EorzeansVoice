@@ -125,7 +125,7 @@ namespace EorzeansVoice {
 
 		public static void SendVoiceToServer(byte[] data) {
 			SendVoice content = new SendVoice {
-				id = Main.instance.userID,
+				id = LogicController.userID,
 				data = data
 			};
 
@@ -160,7 +160,7 @@ namespace EorzeansVoice {
 			msg = received.ToMessage();
 			switch (msg.type) {
 				case NetworkMessageType.UpdateClient:
-					Main.instance.UpdateAround(msg.content.ToObject<List<ClientInfo>>());
+					LogicController.UpdateAround(msg.content.ToObject<List<ClientInfo>>());
 					break;
 				case NetworkMessageType.SendVoiceToClient:
 					AudioController.ProcessAudioData(msg.content.ToObject<SendVoice>());
@@ -172,8 +172,8 @@ namespace EorzeansVoice {
 		}
 
 		public static void ForceDisconnect(string error) {
-			if (Main.instance.userID != 0) {
-				Disconnect(Main.instance.userID);
+			if (LogicController.userID != 0) {
+				Disconnect(LogicController.userID);
 			}
 
 			MessageBox.Show("An error occurred that made the server disconnect you. Please restart EorzeansVoice. Error : " + error);

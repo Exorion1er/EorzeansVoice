@@ -30,7 +30,6 @@ namespace EorzeansVoice {
 			this.GPB_Process = new System.Windows.Forms.GroupBox();
 			this.BT_SelectProcess = new System.Windows.Forms.Button();
 			this.LBL_Process = new System.Windows.Forms.Label();
-			this.TIM_Process = new System.Windows.Forms.Timer(this.components);
 			this.GPB_Audio = new System.Windows.Forms.GroupBox();
 			this.SLD_GlobalVolume = new EorzeansVoice.Utils.Slider();
 			this.SLD_VoiceActivation = new EorzeansVoice.Utils.Slider();
@@ -45,9 +44,6 @@ namespace EorzeansVoice {
 			this.LBL_AudioInputs = new System.Windows.Forms.Label();
 			this.CBB_AudioOutputs = new System.Windows.Forms.ComboBox();
 			this.CBB_AudioInputs = new System.Windows.Forms.ComboBox();
-			this.TIM_LoginWait = new System.Windows.Forms.Timer(this.components);
-			this.TIM_SendInfo = new System.Windows.Forms.Timer(this.components);
-			this.TIM_KeepAlive = new System.Windows.Forms.Timer(this.components);
 			this.GPB_Around = new System.Windows.Forms.GroupBox();
 			this.PAN_AroundContent = new System.Windows.Forms.Panel();
 			this.TIM_UpdateControls = new System.Windows.Forms.Timer(this.components);
@@ -106,10 +102,6 @@ namespace EorzeansVoice {
 			this.LBL_Process.TabIndex = 0;
 			this.LBL_Process.Text = "Loading...";
 			this.LBL_Process.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// TIM_Process
-			// 
-			this.TIM_Process.Tick += new System.EventHandler(this.TIM_Process_Tick);
 			// 
 			// GPB_Audio
 			// 
@@ -183,6 +175,7 @@ namespace EorzeansVoice {
 			this.BT_PTTKeybind.TabIndex = 12;
 			this.BT_PTTKeybind.Text = "Unbound";
 			this.BT_PTTKeybind.UseVisualStyleBackColor = true;
+			this.BT_PTTKeybind.Click += new System.EventHandler(this.BT_PTTKeybind_Click);
 			// 
 			// RBT_PushToTalk
 			// 
@@ -297,20 +290,6 @@ namespace EorzeansVoice {
 			this.CBB_AudioInputs.TabIndex = 0;
 			this.CBB_AudioInputs.SelectedIndexChanged += new System.EventHandler(this.CBB_AudioInputs_SelectedIndexChanged);
 			// 
-			// TIM_LoginWait
-			// 
-			this.TIM_LoginWait.Tick += new System.EventHandler(this.LoginWaitTick);
-			// 
-			// TIM_SendInfo
-			// 
-			this.TIM_SendInfo.Interval = 200;
-			this.TIM_SendInfo.Tick += new System.EventHandler(this.SendInfoTick);
-			// 
-			// TIM_KeepAlive
-			// 
-			this.TIM_KeepAlive.Interval = 1000;
-			this.TIM_KeepAlive.Tick += new System.EventHandler(this.KeepAliveTick);
-			// 
 			// GPB_Around
 			// 
 			this.GPB_Around.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -372,15 +351,11 @@ namespace EorzeansVoice {
 		private System.Windows.Forms.GroupBox GPB_Process;
 		private System.Windows.Forms.Label LBL_Process;
 		private System.Windows.Forms.Button BT_SelectProcess;
-		private System.Windows.Forms.Timer TIM_Process;
 		private System.Windows.Forms.GroupBox GPB_Audio;
 		private System.Windows.Forms.Label LBL_AudioOutputs;
 		private System.Windows.Forms.Label LBL_AudioInputs;
 		private System.Windows.Forms.ComboBox CBB_AudioOutputs;
 		private System.Windows.Forms.ComboBox CBB_AudioInputs;
-		private System.Windows.Forms.Timer TIM_LoginWait;
-		private System.Windows.Forms.Timer TIM_SendInfo;
-		private System.Windows.Forms.Timer TIM_KeepAlive;
 		private System.Windows.Forms.GroupBox GPB_Around;
 		private System.Windows.Forms.Timer TIM_UpdateControls;
 		private System.Windows.Forms.Panel PAN_AroundContent;

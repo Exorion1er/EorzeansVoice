@@ -119,7 +119,7 @@ namespace EorzeansVoice {
 			byte[] encoded = content.data;
 			byte[] final = decoder.DecodePacket(encoded).ToBytes();
 
-			foreach (Main.ClientAround c in Main.instance.around) {
+			foreach (LogicController.ClientAround c in LogicController.around) {
 				if (content.id == c.id) {
 					c.waveProvider.AddSamples(final, 0, final.Length);
 					break;
