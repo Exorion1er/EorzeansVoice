@@ -151,7 +151,7 @@ namespace EorzeansVoice {
 			this.SLD_GlobalVolume.TabIndex = 14;
 			this.SLD_GlobalVolume.Text = "slider1";
 			this.SLD_GlobalVolume.UseActiveValue = false;
-			this.SLD_GlobalVolume.Value = 0.3F;
+			this.SLD_GlobalVolume.Value = 1F;
 			this.SLD_GlobalVolume.ValueChanged += new System.EventHandler(this.SLD_GlobalVolume_ValueChanged);
 			// 
 			// SLD_VoiceActivation

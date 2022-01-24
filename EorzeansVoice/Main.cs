@@ -338,6 +338,7 @@ namespace EorzeansVoice {
 
 		private void SLD_GlobalVolume_ValueChanged(object sender, EventArgs e) {
 			LBL_GlobalVolume.Text = Math.Round(SLD_GlobalVolume.Value * 100f).ToString() + " %";
+			AudioController.ChangeGlobalVolume(SLD_GlobalVolume.Value);
 		}
 	}
 }

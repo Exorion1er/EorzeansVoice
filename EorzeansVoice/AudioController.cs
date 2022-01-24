@@ -156,6 +156,14 @@ namespace EorzeansVoice {
 			output.Stop();
 		}
 
+		public static void ChangeGlobalVolume(float value) {
+			if (output == null) {
+				return;
+			}
+
+			output.Volume = value;
+		}
+
 		private static void DataAvailable(object sender, WaveInEventArgs e) {
 			AudioInputProcessing.ProcessAudioInput(e.Buffer);
 		}
