@@ -1,9 +1,12 @@
 ﻿using EorzeansVoiceLib;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace EorzeansVoice {
 	public partial class Main : Form {
+		private static readonly Keys[] modifierKeys = { Keys.ControlKey, Keys.ShiftKey, Keys.Menu };
+
 		public static Main instance;
 
 		public bool lookingForKeybind;
@@ -121,13 +124,22 @@ namespace EorzeansVoice {
 		}
 
 		private void BT_PTTKeybind_KeyDown(object sender, KeyEventArgs e) {
-			// TODO : Don't stop for modifiers
-
 			if (lookingForKeybind) {
-				lookingForKeybind = false;
-				BT_PTTKeybind.Text = e.Modifiers + " + " + e.KeyData;
+				if (modifierKeys.Contains(e.KeyCode)) {
+					return;
+				}
 
-				AudioInputProcessing.ChangePTTKey(e.KeyData, e.Modifiers);
+				lookingForKeybind = false;
+
+				string display;
+				if (e.Modifiers != 0) {
+					display = e.Modifiers + " + " + e.KeyCode;
+				} else {
+					display = e.KeyCode.ToString();
+				}
+				BT_PTTKeybind.Text = display;
+
+				AudioInputProcessing.ChangePTTKey(e.KeyCode, e.Modifiers);
 				HotkeyController.StartListening();
 			}
 		}

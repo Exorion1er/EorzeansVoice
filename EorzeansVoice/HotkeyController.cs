@@ -1,6 +1,7 @@
 ﻿using EorzeansVoiceLib;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -49,6 +50,10 @@ namespace EorzeansVoice {
 
 		public static readonly List<KeyAction> hookedKeys = new List<KeyAction>();
 
+		private static readonly Keys[] control = { Keys.LControlKey, Keys.RControlKey };
+		private static readonly Keys[] shift = { Keys.LShiftKey, Keys.RShiftKey };
+		private static readonly Keys[] alt = { Keys.LMenu, Keys.RMenu };
+
 		private static IntPtr hhook = IntPtr.Zero;
 		private static KeyboardHookProc SAFE_delegate_callback;
 		private static bool controlDown = false;
@@ -66,19 +71,19 @@ namespace EorzeansVoice {
 				if (code >= 0) { // idk
 					Keys key = (Keys)lParam.vkCode;
 
-					if (key == Keys.Control) {
+					if (control.Contains(key)) {
 						if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
 							controlDown = true;
 						} else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
 							controlDown = false;
 						}
-					} else if (key == Keys.Shift) {
+					} else if (shift.Contains(key)) {
 						if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
 							shiftDown = true;
 						} else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
 							shiftDown = false;
 						}
-					} else if (key == Keys.Alt) {
+					} else if (alt.Contains(key)) {
 						if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
 							altDown = true;
 						} else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
@@ -86,7 +91,6 @@ namespace EorzeansVoice {
 						}
 					} else {
 						foreach (KeyAction ka in hookedKeys) {
-
 							if (ka.key == key && ka.control == controlDown && ka.shift == shiftDown && ka.alt == altDown) {
 								if (ka.upDown.HasFlag(KeyUpDown.KeyDown) && (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)) {
 									ka.callbackDown?.Invoke();
