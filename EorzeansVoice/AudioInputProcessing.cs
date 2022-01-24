@@ -13,10 +13,12 @@ namespace EorzeansVoice {
 
 		public static Mode mode;
 		public static float voiceActivationThreshold;
+		public static HotkeyController.KeyAction pushToTalkKey;
 		public static bool muted = false;
 
 		private static readonly Timer TIM_KeepOn = new Timer();
 		private static OpusEncoder encoder;
+		private static bool pttDown = false;
 
 		public static void Init(float threshold) {
 			voiceActivationThreshold = threshold;
@@ -30,17 +32,6 @@ namespace EorzeansVoice {
 		}
 
 		public static void ProcessAudioInput(byte[] data) {
-			switch (mode) {
-				case Mode.VoiceActivation:
-					VoiceActivation(data);
-					break;
-				case Mode.PushToTalk:
-					// TODO
-					break;
-			}
-		}
-
-		private static void VoiceActivation(byte[] data) {
 			float volume = ((float)MeasureDB(data)).Normalize(-100, 0, 0, 1);
 			Main.instance.UpdateVoiceActivationSlider(volume);
 
@@ -48,15 +39,37 @@ namespace EorzeansVoice {
 				return;
 			}
 
+			bool shouldSend = false;
+
+			switch (mode) {
+				case Mode.VoiceActivation:
+					shouldSend = VoiceActivation(volume);
+					break;
+				case Mode.PushToTalk:
+					shouldSend = PushToTalk();
+					break;
+			}
+
+			if (shouldSend) {
+				EncodeSend(data);
+			}
+		}
+
+		private static bool VoiceActivation(float volume) {
 			bool aboveThreshold = volume >= voiceActivationThreshold;
 			if (TIM_KeepOn.Enabled || aboveThreshold) {
-				EncodeSend(data);
-
 				if (aboveThreshold) {
 					TIM_KeepOn.Stop();
 					TIM_KeepOn.Start();
 				}
+
+				return true;
 			}
+			return false;
+		}
+
+		private static bool PushToTalk() { // TODO
+			return true;
 		}
 
 		private static void TIM_KeepOn_Elapsed(object sender, ElapsedEventArgs e) {
