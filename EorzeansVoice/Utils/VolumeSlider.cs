@@ -48,12 +48,10 @@ namespace EorzeansVoice.Utils {
 
 		private float activeValue = 0.3f;
 		public float ActiveValue {
-			get => useActiveValue ? activeValue : value;
+			get => activeValue;
 			set {
-				if (useActiveValue) {
-					activeValue = value;
-					RecalculateParameters();
-				}
+				activeValue = value;
+				RecalculateParameters();
 			}
 		}
 
