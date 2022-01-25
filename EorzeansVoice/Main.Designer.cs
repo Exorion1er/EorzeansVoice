@@ -176,6 +176,7 @@ namespace EorzeansVoice {
 			this.BT_PTTKeybind.Text = "Unbound";
 			this.BT_PTTKeybind.UseVisualStyleBackColor = true;
 			this.BT_PTTKeybind.Click += new System.EventHandler(this.BT_PTTKeybind_Click);
+			this.BT_PTTKeybind.Leave += new System.EventHandler(this.BT_PTTKeybind_Leave);
 			// 
 			// RBT_PushToTalk
 			// 

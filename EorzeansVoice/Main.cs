@@ -155,5 +155,29 @@ namespace EorzeansVoice {
 				HotkeyController.StartListening();
 			}
 		}
+
+		private void BT_PTTKeybind_Leave(object sender, EventArgs e) {
+			if (lookingForKeybind) {
+				lookingForKeybind = false;
+				BT_PTTKeybind.Text = "Unbound";
+
+				HotkeyController.KeyAction pttKey = AudioInputProcessing.pttKey;
+				if (pttKey != null) {
+					Keys modifiers = pttKey.control ? Keys.Control : Keys.None;
+					modifiers |= pttKey.shift ? Keys.Shift : Keys.None;
+					modifiers |= pttKey.alt ? Keys.Alt : Keys.None;
+
+					string display;
+					if (modifiers != 0) {
+						display = modifiers + " + " + pttKey.key;
+					} else {
+						display = pttKey.key.ToString();
+					}
+					BT_PTTKeybind.Text = display;
+				} else {
+					BT_PTTKeybind.Text = "Unbound";
+				}
+			}
+		}
 	}
 }

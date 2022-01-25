@@ -15,11 +15,11 @@ namespace EorzeansVoice {
 
 		public static Mode mode;
 		public static float voiceActivationThreshold;
+		public static HotkeyController.KeyAction pttKey;
 		public static bool muted = false;
 
 		private static readonly Timer TIM_KeepOn = new Timer();
 		private static OpusEncoder encoder;
-		private static HotkeyController.KeyAction pttKey;
 		private static bool pttDown = false;
 
 		public static void Init(float threshold) {
