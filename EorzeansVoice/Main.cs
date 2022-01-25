@@ -26,15 +26,27 @@ namespace EorzeansVoice {
 		}
 
 		public void UpdateStatus(string message) {
-			LBL_Status.Text = message;
+			if (!InvokeRequired) {
+				LBL_Status.Text = message;
+			} else {
+				Invoke(new Action<string>(UpdateStatus), message);
+			}
 		}
 
 		public void UpdateProcess(string message) {
-			LBL_Process.Text = message;
+			if (!InvokeRequired) {
+				LBL_Process.Text = message;
+			} else {
+				Invoke(new Action<string>(UpdateProcess), message);
+			}
 		}
 
 		public void ToggleProcessButton(bool value) {
-			BT_SelectProcess.Enabled = value;
+			if (!InvokeRequired) {
+				BT_SelectProcess.Enabled = value;
+			} else {
+				Invoke(new Action<bool>(ToggleProcessButton), value);
+			}
 		}
 
 		private void BT_SelectProcess_Click(object sender, EventArgs e) {
