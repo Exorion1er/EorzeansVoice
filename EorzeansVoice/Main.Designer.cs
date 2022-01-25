@@ -176,7 +176,6 @@ namespace EorzeansVoice {
 			this.BT_PTTKeybind.Text = "Unbound";
 			this.BT_PTTKeybind.UseVisualStyleBackColor = true;
 			this.BT_PTTKeybind.Click += new System.EventHandler(this.BT_PTTKeybind_Click);
-			this.BT_PTTKeybind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BT_PTTKeybind_KeyDown);
 			// 
 			// RBT_PushToTalk
 			// 
@@ -332,6 +331,7 @@ namespace EorzeansVoice {
 			this.Controls.Add(this.LBL_Status);
 			this.DoubleBuffered = true;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.KeyPreview = true;
 			this.MaximizeBox = false;
 			this.Name = "Main";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -339,6 +339,7 @@ namespace EorzeansVoice {
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
 			this.Load += new System.EventHandler(this.Main_Load);
 			this.Shown += new System.EventHandler(this.Main_Shown);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Main_KeyDown);
 			this.GPB_Process.ResumeLayout(false);
 			this.GPB_Audio.ResumeLayout(false);
 			this.GPB_Audio.PerformLayout();

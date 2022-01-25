@@ -135,7 +135,7 @@ namespace EorzeansVoice {
 			HotkeyController.StopListening();
 		}
 
-		private void BT_PTTKeybind_KeyDown(object sender, KeyEventArgs e) {
+		private void Main_KeyDown(object sender, KeyEventArgs e) {
 			if (lookingForKeybind) {
 				if (modifierKeys.Contains(e.KeyCode)) {
 					return;
