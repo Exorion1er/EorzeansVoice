@@ -16,10 +16,10 @@ namespace EorzeansVoice {
 				// public const ulong homeWorldID = 0x19B6; // short
 			}
 
-			public const ulong combatantPtr = 0x1E9CB38; // ulong
-			public const ulong nameWhenOnline = 0x1EA0239; // string(21)
-			public const ulong mapID = 0x1E72834; // int
-			public const ulong instanceID = 0x1E6E0CC; // int
+			public const ulong combatantPtr = 0x1EA9B38; // ulong
+			public const ulong nameWhenOnline = 0x1EAD239; // string(21)
+			public const ulong mapID = 0x1E7F834; // int
+			public const ulong instanceID = 0x1E7B0CC; // int
 		}
 
 		public static bool IsLoggedIn(Process p) {
