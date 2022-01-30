@@ -10,7 +10,10 @@ namespace EorzeansVoiceServer {
 
 		static Network() {
 			udpClient = new UdpClient(NetworkConsts.port);
-			udpClient.Client.IOControl((IOControlCode)(-1744830452), new byte[] { 0, 0, 0, 0 }, null);
+
+			if (Environment.OSVersion.Platform == PlatformID.Win32NT) { // Only necessary on Windows
+				udpClient.Client.IOControl((IOControlCode)(-1744830452), new byte[] { 0, 0, 0, 0 }, null);
+			}
 		}
 
 		public static void Start() {
