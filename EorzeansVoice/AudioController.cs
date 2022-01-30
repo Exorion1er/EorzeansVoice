@@ -1,4 +1,5 @@
 ﻿using EorzeansVoice.Utils;
+using EorzeansVoiceLib;
 using EorzeansVoiceLib.NetworkMessageContent;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
@@ -171,7 +172,8 @@ namespace EorzeansVoice {
 
 		private static void RecordingStopped(object sender, StoppedEventArgs e) {
 			if (e?.Exception != null) {
-				MessageBox.Show("An error occured while recording : " + e.Exception.Message);
+				MessageBox.Show("An error occured while recording, please restart Eorzeans' Voice.");
+				Logging.Error("RecordingStopped : " + e.Exception.Message);
 				Application.Exit();
 			} else { // Stopped recording manually
 				input.StartRecording();
@@ -180,7 +182,8 @@ namespace EorzeansVoice {
 
 		private static void PlaybackStopped(object sender, StoppedEventArgs e) {
 			if (e?.Exception != null) {
-				MessageBox.Show("An error occured while playing : " + e.Exception.Message);
+				MessageBox.Show("An error occured while playing, please restart Eorzeans' Voice.");
+				Logging.Error("PlaybackStopped : " + e.Exception.Message);
 				Application.Exit();
 			} else { // Stopped playing manually
 				if (mixer.InputCount > 0) {
