@@ -262,7 +262,7 @@ namespace EorzeansVoice {
 
 				if (i == null) {
 					c.remove = true;
-					Logging.Debug("Removing user from around list : " + i.name + " (" + i.id + ")");
+					Logging.Debug("Removing user from around list : " + c.name + " (" + c.id + ")");
 				}
 			}
 		}
