@@ -11,6 +11,5 @@ cd ../
 :: Unused files
 del ".\bin\client\*.deps.json"
 del ".\bin\server\win\*.deps.json"
-del ".\bin\server\linux\*.deps.json"
 
 :: TODO : Add Configuration files
