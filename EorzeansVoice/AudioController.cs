@@ -89,7 +89,7 @@ namespace EorzeansVoice {
 
 		private static void OutputPlay() {
 			if (output.PlaybackState != PlaybackState.Stopped) {
-				output.Stop();
+				return;
 			}
 
 			if (mixer.InputCount == 0) {
@@ -134,6 +134,7 @@ namespace EorzeansVoice {
 			WaveChannel32 channel = new WaveChannel32(stream);
 
 			mixer.AddInputStream(channel);
+			OutputPlay();
 
 			return new Tuple<BufferedWaveProvider, WaveChannel32>(waveProvider, channel);
 		}
@@ -182,7 +183,9 @@ namespace EorzeansVoice {
 				MessageBox.Show("An error occured while playing : " + e.Exception.Message);
 				Application.Exit();
 			} else { // Stopped playing manually
-				OutputPlay();
+				if (mixer.InputCount > 0) {
+					OutputPlay();
+				}
 			}
 		}
 	}
