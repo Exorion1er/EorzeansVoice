@@ -15,7 +15,7 @@ namespace EorzeansVoice {
 
 		public static bool IsNetworkWorking() {
 			try {
-				HttpWebRequest request = (HttpWebRequest)WebRequest.Create(NetworkConsts.networkTest.ToString());
+				HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://www.google.com");
 				request.Timeout = 3000;
 				request.Method = "HEAD";
 
