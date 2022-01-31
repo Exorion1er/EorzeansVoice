@@ -4,7 +4,6 @@ using EorzeansVoiceLib.Enums;
 using EorzeansVoiceLib.NetworkMessageContent;
 using EorzeansVoiceLib.Utils;
 using NAudio.Wave;
-using nucs.JsonSettings;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -31,7 +30,6 @@ namespace EorzeansVoice {
 		private static readonly Timer TIM_KeepAlive = new Timer();
 		private static readonly Timer TIM_SendInfo = new Timer();
 
-		public static Config config = JsonSettings.Load<Config>();
 		public static int userID;
 		public static List<ClientAround> around = new List<ClientAround>();
 
