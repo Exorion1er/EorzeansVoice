@@ -6,16 +6,23 @@ namespace EorzeansVoice {
 	public partial class USC_ClientAround : UserControl {
 		[Category("Data")]
 		[Description("The user's character name")]
-		public string Userame {
+		public string Username {
 			get { return LBL_CA_Name.Text; }
 			set { LBL_CA_Name.Text = value; }
 		}
 
 		[Category("Data")]
 		[Description("The user's volume")]
-		public int Volume {
-			get { return TBR_CA_Volume.Value; }
-			set { TBR_CA_Volume.Value = value; }
+		public float Volume {
+			get { return SLD_CA_Volume.Value; }
+			set { SLD_CA_Volume.Value = value; }
+		}
+
+		[Category("Data")]
+		[Description("The user's voice level")]
+		public float VoiceLevel {
+			get { return SLD_CA_Volume.ActiveValue; }
+			set { SLD_CA_Volume.ActiveValue = value; }
 		}
 
 		[Category("Data")]
@@ -31,12 +38,17 @@ namespace EorzeansVoice {
 			InitializeComponent();
 		}
 
-		private void TBR_CA_Volume_Scroll(object sender, EventArgs e) {
-			LBL_CA_Volume.Text = TBR_CA_Volume.Value + "%";
-		}
-
 		private void BT_CA_Mute_Click(object sender, EventArgs e) {
 			muted = !muted;
+			if (muted) {
+				BT_CA_Mute.BackgroundImage = Properties.Resources.Muted;
+			} else {
+				BT_CA_Mute.BackgroundImage = Properties.Resources.Speaking;
+			}
+		}
+
+		private void SLD_CA_Volume_ValueChanged(object sender, EventArgs e) {
+			LBL_CA_Volume.Text = SLD_CA_Volume.Value + "%";
 		}
 	}
 }

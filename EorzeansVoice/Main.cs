@@ -110,7 +110,7 @@ namespace EorzeansVoice {
 				} else if (c.controls == null) {
 					USC_ClientAround newClientControls = new USC_ClientAround {
 						Dock = DockStyle.Top,
-						Userame = c.name
+						Username = c.name
 					};
 					PAN_AroundContent.Controls.Add(newClientControls);
 
