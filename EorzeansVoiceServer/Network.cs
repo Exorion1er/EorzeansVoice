@@ -6,22 +6,22 @@ using System.Net.Sockets;
 
 namespace EorzeansVoiceServer {
 	public static class Network {
-		private static readonly UdpClient udpClient;
+		private static UdpClient udpClient;
+		private static int port;
 
-		static Network() {
-			udpClient = new UdpClient(NetworkConsts.port);
+		public static void Start(int p) {
+			port = p;
+			udpClient = new UdpClient(port);
 
 			if (Environment.OSVersion.Platform == PlatformID.Win32NT) { // Only necessary on Windows
 				udpClient.Client.IOControl((IOControlCode)(-1744830452), new byte[] { 0, 0, 0, 0 }, null);
 			}
-		}
 
-		public static void Start() {
 			udpClient.BeginReceive(new AsyncCallback(ReceiveData), null);
 		}
 
 		private static void ReceiveData(IAsyncResult result) {
-			IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, NetworkConsts.port);
+			IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, port);
 			NetworkMessage msg = null;
 
 			try {

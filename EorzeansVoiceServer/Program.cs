@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Timers;
 
 namespace EorzeansVoiceServer {
@@ -13,9 +14,47 @@ namespace EorzeansVoiceServer {
 		private static readonly List<Client> clients = new List<Client>();
 		private static readonly Timer TIM_CheckOffline = new Timer();
 
-		public static void Main() {
-			Logging.AddLogger(Logging.LogType.Console, Logging.LogLevel.Debug); // Replace LogLevel with arg
-			Logging.AddLogger(Logging.LogType.File, Logging.LogLevel.Debug, "Log"); // Replace LogLevel and FileName with arg
+		public static void Main(string[] args) {
+			Logging.LogLevel consoleLogLevel = Logging.LogLevel.Info;
+			Logging.LogLevel logFileLevel = Logging.LogLevel.Warn;
+			string logFileName = "Log";
+
+			if (args.Length < 1) {
+				Console.WriteLine("Usage : <Port> [ConsoleLogLevel=Info] [LogFileLevel=Warn] [LogFileName=Log]");
+				return;
+			}
+
+			if (!int.TryParse(args[0], out int port)) {
+				Console.WriteLine("Please input a correct port.");
+				return;
+			}
+
+			if (port < 1024 || port > 65535) {
+				Console.WriteLine("Please input a port between 1024 and 65535.");
+				return;
+			}
+
+			if (args.Length >= 2 && !Enum.TryParse(args[1], out consoleLogLevel)) {
+				Console.WriteLine("Couldn't parse console LogLevel, using default : Info");
+			}
+
+			if (args.Length >= 3 && !Enum.TryParse(args[2], out logFileLevel)) {
+				Console.WriteLine("Couldn't parse file LogLevel, using default : Warn");
+			}
+
+			if (args.Length >= 4) {
+				Regex logFileNameRGX = new Regex("^[0-9a-zA-Z\\-_.]+$");
+				Match match = logFileNameRGX.Match(args[3]);
+				if (match.Success) {
+					logFileName = args[3].Trim();
+				} else {
+					Console.WriteLine("Log file must be alphanumeric and can only contain those special characters : - . _");
+					Console.WriteLine("Using default Log file name : Log");
+				}
+			}
+
+			Logging.AddLogger(Logging.LogType.Console, consoleLogLevel);
+			Logging.AddLogger(Logging.LogType.File, logFileLevel, logFileName);
 
 			Logging.Info("##### Eorzeans' Voice " + NetworkConsts.serverVersion + " #####\n");
 
@@ -23,7 +62,7 @@ namespace EorzeansVoiceServer {
 			TIM_CheckOffline.Elapsed += TIM_CheckOffline_Elapsed;
 			TIM_CheckOffline.Enabled = true;
 
-			Network.Start();
+			Network.Start(port);
 			Logging.Info("Listening...");
 
 			while (true) {

@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "EorzeansVoiceServer": {
+      "commandName": "Project",
+      "commandLineArgs": "22686 Debug Debug Log",
+      "remoteDebugEnabled": false
+    }
+  }
+}
