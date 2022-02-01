@@ -2,7 +2,6 @@
 using EorzeansVoiceLib;
 using EorzeansVoiceLib.Enums;
 using EorzeansVoiceLib.NetworkMessageContent;
-using EorzeansVoiceLib.Utils;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
