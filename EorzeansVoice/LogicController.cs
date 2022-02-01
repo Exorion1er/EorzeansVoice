@@ -20,6 +20,8 @@ namespace EorzeansVoice {
 			public int id;
 			public string name;
 			public Vector3 position;
+			public bool muted;
+			public float volume;
 			public BufferedWaveProvider waveProvider;
 			public WaveChannel32 channel;
 			public USC_ClientAround controls;

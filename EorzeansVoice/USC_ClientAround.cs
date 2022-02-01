@@ -32,6 +32,16 @@ namespace EorzeansVoice {
 			set { muted = value; }
 		}
 
+		[Category("Action")]
+		[Description("Invoked when this user's mute status changes.")]
+		public event EventHandler MuteChanged;
+
+		[Category("Action")]
+		[Description("Invokes when this user's volume was changed.")]
+		public event EventHandler VolumeChanged;
+
+		public int id;
+
 		private bool muted;
 
 		public USC_ClientAround() {
@@ -45,10 +55,14 @@ namespace EorzeansVoice {
 			} else {
 				BT_CA_Mute.BackgroundImage = Properties.Resources.Speaking;
 			}
+
+			MuteChanged?.Invoke(this, e);
 		}
 
 		private void SLD_CA_Volume_ValueChanged(object sender, EventArgs e) {
-			LBL_CA_Volume.Text = SLD_CA_Volume.Value + "%";
+			LBL_CA_Volume.Text = Math.Round(SLD_CA_Volume.Value * 100f).ToString() + " %";
+
+			VolumeChanged?.Invoke(this, e);
 		}
 	}
 }

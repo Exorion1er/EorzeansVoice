@@ -109,13 +109,39 @@ namespace EorzeansVoice {
 					c.controls.Dispose();
 				} else if (c.controls == null) {
 					USC_ClientAround newClientControls = new USC_ClientAround {
+						id = c.id,
 						Dock = DockStyle.Top,
-						Username = c.name
+						Username = c.name,
 					};
+					newClientControls.MuteChanged += UserMuteChanged;
+					newClientControls.VolumeChanged += UserVolumeChanged;
 					PAN_AroundContent.Controls.Add(newClientControls);
 
 					c.controls = newClientControls;
 				}
+			}
+		}
+
+		private void UserMuteChanged(object sender, EventArgs e) {
+			USC_ClientAround controls = (USC_ClientAround)sender;
+			LogicController.ClientAround ca = LogicController.around.Find(x => x.id == controls.id);
+
+			if (controls.Muted) {
+				ca.muted = true;
+				ca.channel.Volume = 0;
+			} else {
+				ca.muted = false;
+				ca.channel.Volume = ca.volume;
+			}
+		}
+
+		private void UserVolumeChanged(object sender, EventArgs e) {
+			USC_ClientAround controls = (USC_ClientAround)sender;
+			LogicController.ClientAround ca = LogicController.around.Find(x => x.id == controls.id);
+
+			ca.volume = controls.Volume;
+			if (!ca.muted) {
+				ca.channel.Volume = ca.volume;
 			}
 		}
 
