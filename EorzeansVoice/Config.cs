@@ -11,8 +11,8 @@ namespace EorzeansVoice {
 		public const string FileName = "Config.json";
 
 		public int Version { get; set; } = 1;
-		public int ScaleX { get; set; } = 500;
-		public int ScaleY { get; set; } = 650;
+		public int SizeX { get; set; } = 500;
+		public int SizeY { get; set; } = 650;
 		public string Address { get; set; } = "127.0.0.1";
 		public int Port { get; set; } = 22686;
 		public float GlobalVolume { get; set; } = 1.0f;
@@ -20,6 +20,7 @@ namespace EorzeansVoice {
 		public bool Deaf { get; set; } = false;
 		public AudioInputProcessing.Mode VoiceMode { get; set; } = AudioInputProcessing.Mode.VoiceActivation;
 		public float VoiceActivationThreshold { get; set; } = 0.7f;
+		public HotkeyController.KeyAction PushToTalkKey { get; set; }
 
 		public static Config Load() {
 			if (!File.Exists(FileName)) {

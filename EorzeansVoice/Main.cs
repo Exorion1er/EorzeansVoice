@@ -18,11 +18,19 @@ namespace EorzeansVoice {
 		private void Main_Load(object sender, EventArgs e) {
 			instance = this;
 
-			LogicController.Load(CBB_AudioInputs, CBB_AudioOutputs, SLD_VoiceActivation.Value);
+			LogicController.Load(CBB_AudioInputs, CBB_AudioOutputs);
 		}
 
 		private void Main_Shown(object sender, EventArgs e) {
 			LogicController.MainShown();
+		}
+
+		public void UpdateSize(int x, int y) {
+			if (!InvokeRequired) {
+				Size = new System.Drawing.Size(x, y);
+			} else {
+				Invoke(new Action<int, int>(UpdateSize), x, y);
+			}
 		}
 
 		public void UpdateStatus(string message) {
@@ -47,6 +55,42 @@ namespace EorzeansVoice {
 			} else {
 				Invoke(new Action<bool>(ToggleProcessButton), value);
 			}
+		}
+
+		public void UpdateVoiceActivationSLDMainValue(float value) {
+			if (!InvokeRequired) {
+				SLD_VoiceActivation.Value = value;
+			} else {
+				Invoke(new Action<float>(UpdateVoiceActivationSLDMainValue), value);
+			}
+		}
+
+		public void UpdateGlobalVolume(float value) {
+			if (!InvokeRequired) {
+				SLD_GlobalVolume.Value = value;
+			} else {
+				Invoke(new Action<float>(UpdateGlobalVolume), value);
+			}
+		}
+
+		public float GetGlobalVolume() {
+			return SLD_GlobalVolume.Value;
+		}
+
+		public void UpdateVoiceMode(AudioInputProcessing.Mode mode) {
+			if (!InvokeRequired) {
+				if (mode == AudioInputProcessing.Mode.VoiceActivation) {
+					RBT_VoiceActivation.Checked = true;
+				} else if (mode == AudioInputProcessing.Mode.PushToTalk) {
+					RBT_PushToTalk.Checked = true;
+				}
+			} else {
+				Invoke(new Action<AudioInputProcessing.Mode>(UpdateVoiceMode), mode);
+			}
+		}
+
+		public void UpdateVoiceActivationSLDActiveValue(float value) {
+			SLD_VoiceActivation.ActiveValue = value;
 		}
 
 		private void BT_SelectProcess_Click(object sender, EventArgs e) {
@@ -92,12 +136,12 @@ namespace EorzeansVoice {
 			AudioInputProcessing.voiceActivationThreshold = SLD_VoiceActivation.Value;
 		}
 
-		public void UpdateVoiceActivationSlider(float value) {
-			SLD_VoiceActivation.ActiveValue = value;
+		private void BT_Mute_Click(object sender, EventArgs e) {
+			ToggleMute(!AudioInputProcessing.muted);
 		}
 
-		private void BT_Mute_Click(object sender, EventArgs e) {
-			if (AudioInputProcessing.muted) {
+		public void ToggleMute(bool value) {
+			if (!value) {
 				AudioInputProcessing.muted = false;
 				BT_Mute.BackgroundImage = Properties.Resources.Speaking;
 				Logging.Debug("Now speaking.");
@@ -161,23 +205,27 @@ namespace EorzeansVoice {
 				lookingForKeybind = false;
 				BT_PTTKeybind.Text = "Unbound";
 
-				HotkeyController.KeyAction pttKey = AudioInputProcessing.pttKey;
-				if (pttKey != null) {
-					Keys modifiers = pttKey.control ? Keys.Control : Keys.None;
-					modifiers |= pttKey.shift ? Keys.Shift : Keys.None;
-					modifiers |= pttKey.alt ? Keys.Alt : Keys.None;
-
-					string display;
-					if (modifiers != 0) {
-						display = modifiers + " + " + pttKey.key;
-					} else {
-						display = pttKey.key.ToString();
-					}
-					BT_PTTKeybind.Text = display;
+				if (AudioInputProcessing.pttKey != null) {
+					PTTDisplayUseAlreadyBound();
 				} else {
 					BT_PTTKeybind.Text = "Unbound";
 				}
 			}
+		}
+
+		public void PTTDisplayUseAlreadyBound() {
+			HotkeyController.KeyAction pttKey = AudioInputProcessing.pttKey;
+			Keys modifiers = pttKey.control ? Keys.Control : Keys.None;
+			modifiers |= pttKey.shift ? Keys.Shift : Keys.None;
+			modifiers |= pttKey.alt ? Keys.Alt : Keys.None;
+
+			string display;
+			if (modifiers != 0) {
+				display = modifiers + " + " + pttKey.key;
+			} else {
+				display = pttKey.key.ToString();
+			}
+			BT_PTTKeybind.Text = display;
 		}
 	}
 }

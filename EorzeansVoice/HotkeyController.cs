@@ -1,4 +1,4 @@
-﻿using EorzeansVoiceLib;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,9 @@ namespace EorzeansVoice {
 			public bool shift;
 			public bool control;
 			public bool alt;
+			[JsonIgnore]
 			public Action callbackDown;
+			[JsonIgnore]
 			public Action callbackUp;
 		}
 

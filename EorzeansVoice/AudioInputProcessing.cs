@@ -60,7 +60,7 @@ namespace EorzeansVoice {
 
 		public static void ProcessAudioInput(byte[] data) {
 			float volume = ((float)MeasureDB(data)).Normalize(-100, 0, 0, 1);
-			Main.instance.UpdateVoiceActivationSlider(volume);
+			Main.instance.UpdateVoiceActivationSLDActiveValue(volume);
 
 			if (muted) {
 				return;

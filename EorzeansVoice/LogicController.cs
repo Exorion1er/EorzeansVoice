@@ -30,6 +30,7 @@ namespace EorzeansVoice {
 		private static readonly Timer TIM_KeepAlive = new Timer();
 		private static readonly Timer TIM_SendInfo = new Timer();
 
+		public static Config config;
 		public static int userID;
 		public static List<ClientAround> around = new List<ClientAround>();
 
@@ -38,7 +39,7 @@ namespace EorzeansVoice {
 		private static UpdateServer infoCache;
 		private static DateTime lastSent;
 
-		public static void Load(ComboBox inputs, ComboBox outputs, float voiceActivationThreshold) {
+		public static void Load(ComboBox inputs, ComboBox outputs) {
 			Logging.AddLogger(Logging.LogType.File, Logging.LogLevel.Debug, "Log"); // Replace with Settings
 			Logging.Info("##### Eorzeans' Voice " + NetworkConsts.clientVersion + " #####\n");
 			Logging.Info("Loading...");
@@ -70,8 +71,12 @@ namespace EorzeansVoice {
 				return;
 			}
 
+			Logging.Debug("Loading configuration file and apply its values...");
+			config = Config.Load();
+			ApplyConfig();
+
 			Logging.Debug("Loading Audio...");
-			InitAudio(inputs, outputs, voiceActivationThreshold);
+			InitAudio(inputs, outputs, config.VoiceActivationThreshold);
 
 			Logging.Debug("Initializing timers...");
 			InitTimers();
@@ -98,6 +103,24 @@ namespace EorzeansVoice {
 
 			TIM_SendInfo.Interval = 200;
 			TIM_SendInfo.Elapsed += TIM_SendInfo_Elapsed;
+		}
+
+		private static void ApplyConfig() {
+			Main.instance.UpdateSize(config.SizeX, config.SizeY);
+			Main.instance.UpdateGlobalVolume(config.GlobalVolume);
+			Main.instance.ToggleMute(config.Muted);
+			// Deaf
+			Main.instance.UpdateVoiceMode(config.VoiceMode);
+			Main.instance.UpdateVoiceActivationSLDMainValue(config.VoiceActivationThreshold);
+
+			if (config.PushToTalkKey != null) {
+				Keys modifiers = config.PushToTalkKey.control ? Keys.Control : Keys.None;
+				modifiers |= config.PushToTalkKey.shift ? Keys.Shift : Keys.None;
+				modifiers |= config.PushToTalkKey.alt ? Keys.Alt : Keys.None;
+				AudioInputProcessing.ChangePTTKey(config.PushToTalkKey.key, modifiers);
+				HotkeyController.StartListening();
+				Main.instance.PTTDisplayUseAlreadyBound();
+			}
 		}
 
 		public static void MainShown() {
@@ -268,10 +291,24 @@ namespace EorzeansVoice {
 		}
 
 		public static void Closing() {
+			SaveConfig();
 			if (userID != 0) {
 				Logging.Info("Disconnect before closing.");
 				Network.Disconnect(userID);
 			}
+		}
+
+		private static void SaveConfig() {
+			config.SizeX = Main.instance.Size.Width;
+			config.SizeY = Main.instance.Size.Height;
+			config.GlobalVolume = Main.instance.GetGlobalVolume();
+			config.Muted = AudioInputProcessing.muted;
+			// Deaf
+			config.VoiceMode = AudioInputProcessing.mode;
+			config.VoiceActivationThreshold = AudioInputProcessing.voiceActivationThreshold;
+			config.PushToTalkKey = AudioInputProcessing.pttKey;
+
+			config.Save();
 		}
 	}
 }
