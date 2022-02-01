@@ -1,5 +1,6 @@
 ﻿using EorzeansVoiceLib;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -27,7 +28,7 @@ namespace EorzeansVoice {
 
 		public void UpdateSize(int x, int y) {
 			if (!InvokeRequired) {
-				Size = new System.Drawing.Size(x, y);
+				Size = new Size(x, y);
 			} else {
 				Invoke(new Action<int, int>(UpdateSize), x, y);
 			}
