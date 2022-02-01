@@ -3,6 +3,9 @@
 namespace EorzeansVoiceLib.Utils {
 	[Serializable]
 	public class Version {
+		public static readonly Version client = new Version(0, 1, 0);
+		public static readonly Version server = new Version(0, 1, 0);
+
 		public int major;
 		public int minor;
 		public int fix;

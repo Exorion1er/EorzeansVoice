@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using Version = EorzeansVoiceLib.Utils.Version;
 
 namespace EorzeansVoice {
 	public static class Network {
@@ -37,7 +38,7 @@ namespace EorzeansVoice {
 
 		public static bool ConnectToServer() {
 			try {
-				IPEndPoint ep = new IPEndPoint(IPAddress.Parse(NetworkConsts.serverAddr), NetworkConsts.port);
+				IPEndPoint ep = new IPEndPoint(IPAddress.Parse(LogicController.config.Address), LogicController.config.Port);
 				udpClient = new UdpClient();
 				udpClient.Connect(ep);
 
@@ -54,7 +55,7 @@ namespace EorzeansVoice {
 				byte[] pingMessage = new NetworkMessage(NetworkMessageType.Ping, "Ping").ToBytes();
 				udpClient.Send(pingMessage, pingMessage.Length);
 
-				IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(NetworkConsts.serverAddr), NetworkConsts.port);
+				IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(LogicController.config.Address), LogicController.config.Port);
 				byte[] received = udpClient.Receive(ref remoteEP);
 
 				NetworkMessage msg = received.ToMessage();
@@ -68,11 +69,11 @@ namespace EorzeansVoice {
 
 		public static VersionCheckAnswer IsUpToDate() {
 			try {
-				VersionCheck vCheck = new VersionCheck(NetworkConsts.clientVersion, NetworkConsts.serverVersion);
+				VersionCheck vCheck = new VersionCheck(Version.client, Version.server);
 				byte[] versionCheckMessage = new NetworkMessage(NetworkMessageType.VersionCheck, vCheck).ToBytes();
 				udpClient.Send(versionCheckMessage, versionCheckMessage.Length);
 
-				IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(NetworkConsts.serverAddr), NetworkConsts.port);
+				IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(LogicController.config.Address), LogicController.config.Port);
 				byte[] received = udpClient.Receive(ref remoteEP);
 
 				NetworkMessage msg = received.ToMessage();
@@ -97,7 +98,7 @@ namespace EorzeansVoice {
 				byte[] connectMessage = new NetworkMessage(NetworkMessageType.Connect, connect).ToBytes();
 				udpClient.Send(connectMessage, connectMessage.Length);
 
-				IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(NetworkConsts.serverAddr), NetworkConsts.port);
+				IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(LogicController.config.Address), LogicController.config.Port);
 				byte[] received = udpClient.Receive(ref remoteEP);
 
 				NetworkMessage msg = received.ToMessage();
@@ -139,7 +140,7 @@ namespace EorzeansVoice {
 		}
 
 		private static void ReceiveData(IAsyncResult result) {
-			IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, NetworkConsts.port);
+			IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, LogicController.config.Port);
 			NetworkMessage msg = null;
 			byte[] received = null;
 

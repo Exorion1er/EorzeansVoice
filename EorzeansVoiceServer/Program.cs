@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Timers;
+using Version = EorzeansVoiceLib.Utils.Version;
 
 namespace EorzeansVoiceServer {
 	public class Program {
@@ -56,7 +57,7 @@ namespace EorzeansVoiceServer {
 			Logging.AddLogger(Logging.LogType.Console, consoleLogLevel);
 			Logging.AddLogger(Logging.LogType.File, logFileLevel, logFileName);
 
-			Logging.Info("##### Eorzeans' Voice " + NetworkConsts.serverVersion + " #####\n");
+			Logging.Info("##### Eorzeans' Voice " + Version.server + " #####\n");
 
 			TIM_CheckOffline.Interval = 1000;
 			TIM_CheckOffline.Elapsed += TIM_CheckOffline_Elapsed;
@@ -106,10 +107,10 @@ namespace EorzeansVoiceServer {
 			VersionCheck vCheck = received.content.ToObject<VersionCheck>();
 			NetworkMessage reply = new NetworkMessage(NetworkMessageType.VersionCheckResult, VersionCheckAnswer.UpToDate);
 			string verboseResult = "Up to date.";
-			if (vCheck.clientVersion < NetworkConsts.clientVersion) {
+			if (vCheck.clientVersion < Version.client) {
 				reply.content = VersionCheckAnswer.ClientOutOfDate;
 				verboseResult = "Remote client is outdated !";
-			} else if (vCheck.serverVersion < NetworkConsts.serverVersion) {
+			} else if (vCheck.serverVersion < Version.server) {
 				reply.content = VersionCheckAnswer.ServerOutOfDate;
 				verboseResult = "This server is outdated !";
 

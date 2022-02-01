@@ -12,6 +12,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
 using Timer = System.Timers.Timer;
+using Version = EorzeansVoiceLib.Utils.Version;
 
 namespace EorzeansVoice {
 	public static class LogicController {
@@ -40,8 +41,11 @@ namespace EorzeansVoice {
 		private static DateTime lastSent;
 
 		public static void Load(ComboBox inputs, ComboBox outputs) {
+			config = Config.Load();
+			ApplyConfig();
+
 			Logging.AddLogger(Logging.LogType.File, Logging.LogLevel.Debug, "Log"); // Replace with Settings
-			Logging.Info("##### Eorzeans' Voice " + NetworkConsts.clientVersion + " #####\n");
+			Logging.Info("##### Eorzeans' Voice " + Version.client + " #####\n");
 			Logging.Info("Loading...");
 
 			Logging.Debug("Checking admin permissions...");
@@ -70,10 +74,6 @@ namespace EorzeansVoice {
 				Application.Exit();
 				return;
 			}
-
-			Logging.Debug("Loading configuration file and apply its values...");
-			config = Config.Load();
-			ApplyConfig();
 
 			Logging.Debug("Loading Audio...");
 			InitAudio(inputs, outputs, config.VoiceActivationThreshold);
