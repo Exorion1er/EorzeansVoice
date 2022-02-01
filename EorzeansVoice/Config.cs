@@ -10,11 +10,12 @@ namespace EorzeansVoice {
 		[JsonIgnore]
 		public const string FileName = "Config.json";
 
-		public int Version { get; set; } = 2;
+		public int Version { get; set; } = 1;
 		public int ScaleX { get; set; } = 500;
 		public int ScaleY { get; set; } = 650;
 		public string Address { get; set; } = "127.0.0.1";
 		public int Port { get; set; } = 22686;
+		public float GlobalVolume { get; set; } = 1.0f;
 		public bool Muted { get; set; } = false;
 		public bool Deaf { get; set; } = false;
 		public AudioInputProcessing.Mode VoiceMode { get; set; } = AudioInputProcessing.Mode.VoiceActivation;
@@ -80,18 +81,8 @@ namespace EorzeansVoice {
 
 			try {
 				switch (inputVersion) {
-					case 1:
-						Regex scaleXRGX = new Regex("\"ScaleX\": ([0-9]+)\\.[0-9]+,");
-						Match matchX = scaleXRGX.Match(input);
-						int scaleX = int.Parse(matchX.Groups[1].Value);
-						input = scaleXRGX.Replace(input, "\"ScaleX\": " + scaleX + ",");
-
-						Regex scaleYRGX = new Regex("\"ScaleY\": ([0-9]+)\\.[0-9]+,");
-						Match matchY = scaleYRGX.Match(input);
-						int scaleY = int.Parse(matchY.Groups[1].Value);
-						input = scaleYRGX.Replace(input, "\"ScaleY\": " + scaleY + ",");
-
-						Logging.Debug("Applied config file upgrade from V1 to V2.");
+					case 1: // V1 to V2
+						// Do stuff here
 						break;
 				}
 			} catch (Exception e) {
