@@ -32,10 +32,12 @@ namespace EorzeansVoiceLib.Utils {
 		}
 
 		public string ToString(string format, IFormatProvider formatProvider) {
-			if (string.IsNullOrEmpty(format))
+			if (string.IsNullOrEmpty(format)) {
 				format = "F2";
-			if (formatProvider == null)
+			}
+			if (formatProvider == null) {
 				formatProvider = CultureInfo.InvariantCulture.NumberFormat;
+			}
 			return string.Format("({0}, {1}, {2})", x.ToString(format, formatProvider), y.ToString(format, formatProvider), z.ToString(format, formatProvider));
 		}
 
