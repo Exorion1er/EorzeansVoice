@@ -1,4 +1,4 @@
-﻿using EorzeansVoice.Utils;
+﻿using EorzeansVoiceLib.Utils;
 using System.Diagnostics;
 
 namespace EorzeansVoice {

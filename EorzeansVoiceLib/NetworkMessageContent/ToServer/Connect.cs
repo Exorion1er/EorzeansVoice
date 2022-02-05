@@ -1,4 +1,4 @@
-﻿using EorzeansVoice.Utils;
+﻿using EorzeansVoiceLib.Utils;
 
 namespace EorzeansVoiceLib.NetworkMessageContent {
 	public class Connect {

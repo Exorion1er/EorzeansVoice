@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace EorzeansVoice.Utils {
+namespace EorzeansVoiceLib.Utils {
 	[Serializable]
 	public struct Vector3 {
 		public Vector3(float x, float y, float z) {
