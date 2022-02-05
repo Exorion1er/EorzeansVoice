@@ -2,6 +2,7 @@
 using EorzeansVoiceLib;
 using EorzeansVoiceLib.Enums;
 using EorzeansVoiceLib.NetworkMessageContent;
+using EorzeansVoiceLib.Utils;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -259,6 +260,42 @@ namespace EorzeansVoice {
 			}
 		}
 
+		public static void RecalculateAudios() { // When user moves
+			foreach (ClientAround c in around) {
+				RecalculateAudioOf(c);
+			}
+		}
+
+		public static void RecalculateAudioOf(ClientAround c) {
+			c.channel.Volume = CalculateVolume(infoCache.position, c.position);
+			c.channel.Pan = CalculatePanning(GameData.GetHeading(gameProcess), infoCache.position, c.position);
+		}
+
+		private static float CalculateVolume(Vector3 clientPos, Vector3 playerPos) {
+			float distance = Vector3.Distance(clientPos, playerPos);
+			float clamped = Math.Clamp(distance, 10f, 50f);
+			float final = clamped.Normalize(10f, 50f, 1f, 0f);
+			return clamped.Normalize(10f, 50f, 1f, 0f);
+		}
+
+		private static float CalculatePanning(float radHeading, Vector3 clientPos, Vector3 playerPos) {
+			Quaternion rot = Quaternion.Euler(0, radHeading * (360 / ((float)Math.PI * 2)), 0);
+			Vector3 right = rot * Vector3.Right;
+			float dotP = Vector3.Dot(playerPos - clientPos, right);
+			Vector3 panningPos = infoCache.position + right * dotP;
+			float distanceToPanning = Vector3.Distance(infoCache.position, panningPos);
+			float clamped = Math.Clamp(distanceToPanning, 0f, 20f);
+
+			float panning = 0f;
+			if (dotP > 0f) { // Left
+				panning = clamped.Normalize(0f, 20f, 0f, -1f);
+			} else if (dotP < 0f) { // Right
+				panning = clamped.Normalize(0f, 20f, 0f, 1f);
+			}
+			float rounded = (float)Math.Round(panning, 1);
+			return rounded;
+		}
+
 		public static void UpdateAround(List<ClientInfo> info) {
 			foreach (ClientInfo i in info) {
 				ClientAround c = around.FirstOrDefault(x => x.id == i.id);
@@ -278,6 +315,7 @@ namespace EorzeansVoice {
 					Logging.Debug("Adding user to around list : " + i.name + " (" + i.id + ")");
 				} else {
 					c.position = i.position;
+					RecalculateAudioOf(c);
 				}
 			}
 

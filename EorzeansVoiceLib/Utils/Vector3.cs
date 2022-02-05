@@ -15,6 +15,7 @@ namespace EorzeansVoiceLib.Utils {
 		public float z;
 
 		public static Vector3 Zero { get; } = new Vector3(0f, 0f, 0f);
+		public static Vector3 Right { get; } = new Vector3(1F, 0F, 0F);
 
 		public static float Distance(Vector3 a, Vector3 b) {
 			float diff_x = a.x - b.x;
@@ -22,6 +23,8 @@ namespace EorzeansVoiceLib.Utils {
 			float diff_z = a.z - b.z;
 			return (float)Math.Sqrt(diff_x * diff_x + diff_y * diff_y + diff_z * diff_z);
 		}
+
+		public static float Dot(Vector3 lhs, Vector3 rhs) { return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z; }
 
 		public override string ToString() {
 			return ToString(null, null);
@@ -52,9 +55,11 @@ namespace EorzeansVoiceLib.Utils {
 			return HashCode.Combine(x, y, z);
 		}
 
-		public static bool operator ==(Vector3 a, Vector3 b) {
-			return a.Equals(b);
-		}
-		public static bool operator !=(Vector3 a, Vector3 b) => !(a == b); 
+		public static bool operator ==(Vector3 a, Vector3 b) => a.Equals(b);
+		public static bool operator !=(Vector3 a, Vector3 b) => !(a == b);
+
+		public static Vector3 operator +(Vector3 a, Vector3 b) { return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z); }
+		public static Vector3 operator -(Vector3 a, Vector3 b) { return new Vector3(a.x - b.x, a.y - b.y, a.z - b.z); }
+		public static Vector3 operator *(Vector3 a, float d) { return new Vector3(a.x * d, a.y * d, a.z * d); }
 	}
 }
