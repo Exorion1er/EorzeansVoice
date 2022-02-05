@@ -53,6 +53,11 @@ namespace EorzeansVoice {
 			return pos;
 		}
 
+		public static float GetHeading(Process p) {
+			ulong combatantAddr = MemoryReader.GetValue<ulong>(p, Offsets.combatantPtr);
+			return MemoryReader.GetValue<float>(p, Offsets.Combatant.Heading, combatantAddr);
+		}
+
 		public static short GetCurrentWorldID(Process p) {
 			ulong combatantAddr = MemoryReader.GetValue<ulong>(p, Offsets.combatantPtr);
 			return MemoryReader.GetValue<short>(p, Offsets.Combatant.currentWorldID, combatantAddr);
