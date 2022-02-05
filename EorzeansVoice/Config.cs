@@ -13,7 +13,7 @@ namespace EorzeansVoice {
 		public int Version { get; set; } = 1;
 		public int SizeX { get; set; } = 500;
 		public int SizeY { get; set; } = 650;
-		public string Address { get; set; } = "127.0.0.1";
+		public string Address { get; set; } = "51.15.173.121";
 		public int Port { get; set; } = 22686;
 		public float GlobalVolume { get; set; } = 1.0f;
 		public bool Muted { get; set; } = false;
