@@ -7,9 +7,9 @@ namespace EorzeansVoice {
 			public class Combatant {
 				//public const ulong Name = 0x30; // string(64)
 				public const ulong posX = 0xA0; // float
-				public const ulong posZ = 0xA4; // float
-				public const ulong posY = 0xA8; // float
-				// public const ulong Heading = 0xB0; // float
+				public const ulong posY = 0xA4; // float
+				public const ulong posZ = 0xA8; // float
+				public const ulong Heading = 0xB0; // float
 				// public const ulong Job = 0x1E0; // byte
 				// public const ulong Level = 0x1E1; // byte
 				public const ulong currentWorldID = 0x19B4; // short
