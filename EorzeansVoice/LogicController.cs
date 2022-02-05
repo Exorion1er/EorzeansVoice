@@ -274,7 +274,6 @@ namespace EorzeansVoice {
 		private static float CalculateVolume(Vector3 clientPos, Vector3 playerPos) {
 			float distance = Vector3.Distance(clientPos, playerPos);
 			float clamped = Math.Clamp(distance, 10f, 50f);
-			float final = clamped.Normalize(10f, 50f, 1f, 0f);
 			return clamped.Normalize(10f, 50f, 1f, 0f);
 		}
 
