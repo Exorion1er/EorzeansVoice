@@ -312,6 +312,7 @@ namespace EorzeansVoice {
 
 					around.Add(newAround);
 					Logging.Debug("Adding user to around list : " + i.name + " (" + i.id + ")");
+					RecalculateAudioOf(newAround);
 				} else {
 					c.position = i.position;
 					RecalculateAudioOf(c);
